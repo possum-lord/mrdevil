@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date with Mr.Devil</title>
-    <style>
+<style>
         @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
 
         * { box-sizing: border-box; }
@@ -22,7 +22,6 @@
             overflow: hidden;
         }
 
-        /* 기본 컨테이너 (PC 화면용 비율 4:3) */
         #game-container {
             width: 100vw;
             max-width: 800px;
@@ -34,16 +33,21 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
-        /* 💡 추가됨: 스마트폰(가로폭 600px 이하)일 경우 화면을 세로로 길게 만듭니다 */
+        /* 📱 모바일 전용 설정 */
         @media (max-width: 600px) {
             #game-container {
-                aspect-ratio: 3 / 4.5; /* 모바일에서 위아래 공간을 아주 넉넉하게 확보 */
+                aspect-ratio: 3 / 4.5; 
             }
+            /* 💡 수정됨: 모바일에서 텍스트 박스가 길어지는 것에 대비해 Mr.Devil을 확 끌어올림 */
             #mr-devil {
-                bottom: 30% !important; /* 모바일에서는 박스가 커지므로 쥐의 위치를 조금 올림 */
+                bottom: 35% !important; 
             }
         }
-
+/* 💡 추가됨: 바에 앉아있는 Mr.Devil 전용 애니메이션 클래스 */
+        .sitting-breathe {
+            animation: breathe 1.5s infinite alternate ease-in-out;
+            transform-origin: 240px 180px; /* SVG 내부에서 쥐의 엉덩이(바닥) 기준 좌표 */
+        }
         #game-container::after {
             content: "";
             position: absolute;
@@ -67,34 +71,38 @@
 
         #mr-devil {
             position: absolute;
+            /* PC 기본 위치 (모바일이 아닐 때) */
             bottom: 26%;
             left: 50%;
             transform: translateX(-50%);
             width: 35%;
             height: auto;
-            animation: breathe 2s infinite alternate ease-in-out;
+            /* 애니메이션 속도를 조금 당기고 눈에 띄게 수정 */
+            animation: breathe 1.5s infinite alternate ease-in-out;
             z-index: 5;
+            /* 💡 추가됨: 애니메이션의 중심축을 바닥(bottom)으로 설정하여 발은 바닥에 붙은 채 상체가 들썩거리게 만듦 */
+            transform-origin: bottom center; 
         }
 
+        /* 💡 수정됨: scaleY(위아래 늘어남) 비율을 1.04 -> 1.08로 늘려 더 역동적인 숨쉬기 표현 */
         @keyframes breathe {
             0% { transform: translateX(-50%) scaleY(1); }
-            100% { transform: translateX(-50%) scaleY(1.04); }
+            100% { transform: translateX(-50%) scaleY(1.08); }
         }
 
-        /* 💡 수정됨: 하단 여백 추가, 텍스트-버튼 간격 증가, 자동 높이 조절 */
         #dialogue-box {
             position: absolute;
             bottom: 0; left: 0;
             width: 100%; 
             min-height: 28%;
-            height: auto; /* 내용물이 많으면 위로 커지도록 설정 */
+            height: auto; 
             background: #1a1a1a;
             border-top: 4px solid #fff;
-            padding: 20px 20px 30px 20px; /* 아래쪽(30px) 패딩을 넉넉하게 주어 잘림 방지 */
+            padding: 20px 20px 30px 20px; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            gap: 20px; /* 텍스트와 버튼 사이를 넓게 띄움 */
+            gap: 20px; 
             z-index: 10;
         }
 
@@ -102,14 +110,14 @@
             font-size: clamp(16px, 4vw, 28px);
             color: #eee;
             margin: 0;
-            line-height: 1.4; /* 글씨 줄 간격을 넓혀 답답하지 않게 조절 */
+            line-height: 1.4; 
         }
 
         #options {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
-            padding-bottom: 5px; /* 버튼 아래쪽 추가 안전 여백 */
+            padding-bottom: 5px; 
         }
 
         .option-btn {
@@ -118,7 +126,7 @@
             color: #fff;
             font-family: 'Pixelify Sans', sans-serif;
             font-size: clamp(14px, 3.5vw, 20px);
-            padding: 8px 16px; /* 버튼 크기도 px로 고정하여 모양 유지 */
+            padding: 8px 16px; 
             cursor: pointer;
             transition: all 0.2s;
             text-transform: uppercase;
@@ -228,8 +236,10 @@
         <!-- Counter edge highlight -->
         <polygon points="120,330 270,370 750,220 750,225 270,375 120,335" fill="#52301c" class="pixel-rendering"/>
 
-        <!-- Mr. Devil (Side View) -->
-        <g transform="translate(240, 110) scale(10)">
+      <!-- Mr. Devil (Side View) -->
+        <g transform="translate(240, 110) scale(10)" class="sitting-breathe">
+            <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
+            <!-- ... (나머지는 그대로 유지) ... -->
             <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
             <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/>
             <rect x="12" y="33" width="8" height="1" fill="#111" class="pixel-rendering"/>
