@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date with Mr.Devil</title>
-<style>
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
 
         * { box-sizing: border-box; }
@@ -33,21 +33,22 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
-        /* 📱 모바일 전용 설정 */
+        /* 📱 모바일 전용 UI 공간 완벽 분리 */
         @media (max-width: 600px) {
             #game-container {
                 aspect-ratio: 3 / 4.5; 
             }
-            /* 💡 수정됨: 모바일에서 텍스트 박스가 길어지는 것에 대비해 Mr.Devil을 확 끌어올림 */
             #mr-devil {
-                bottom: 35% !important; 
+                /* 모바일에서 텍스트 박스가 길어지더라도 절대 가리지 않도록 위치와 크기 조정 */
+                bottom: 38% !important; 
+                width: 25% !important; 
+            }
+            #dialogue-box {
+                padding: 15px 15px 20px 15px !important; 
+                gap: 15px !important;
             }
         }
-/* 💡 추가됨: 바에 앉아있는 Mr.Devil 전용 애니메이션 클래스 */
-        .sitting-breathe {
-            animation: breathe 1.5s infinite alternate ease-in-out;
-            transform-origin: 240px 180px; /* SVG 내부에서 쥐의 엉덩이(바닥) 기준 좌표 */
-        }
+
         #game-container::after {
             content: "";
             position: absolute;
@@ -69,25 +70,34 @@
 
         .pixel-rendering { shape-rendering: crispEdges; }
 
+        /* ---------------- 애니메이션 1: 메인 화면의 서있는 쥐 ---------------- */
         #mr-devil {
             position: absolute;
-            /* PC 기본 위치 (모바일이 아닐 때) */
             bottom: 26%;
             left: 50%;
             transform: translateX(-50%);
             width: 35%;
             height: auto;
-            /* 애니메이션 속도를 조금 당기고 눈에 띄게 수정 */
             animation: breathe 1.5s infinite alternate ease-in-out;
             z-index: 5;
-            /* 💡 추가됨: 애니메이션의 중심축을 바닥(bottom)으로 설정하여 발은 바닥에 붙은 채 상체가 들썩거리게 만듦 */
             transform-origin: bottom center; 
         }
 
-        /* 💡 수정됨: scaleY(위아래 늘어남) 비율을 1.04 -> 1.08로 늘려 더 역동적인 숨쉬기 표현 */
         @keyframes breathe {
             0% { transform: translateX(-50%) scaleY(1); }
             100% { transform: translateX(-50%) scaleY(1.08); }
+        }
+
+        /* ---------------- 애니메이션 2: 바(Bar)에서 앉아있는 쥐 ---------------- */
+        /* 위치 크기 속성(transform)과 충돌하지 않도록 내부 애니메이션 전용 클래스 분리 */
+        .sitting-breathe {
+            animation: sittingBreathe 1.5s infinite alternate ease-in-out;
+            transform-origin: 15px 25px; /* 엉덩이(의자 닿는 곳)를 기준으로 상하 운동 */
+        }
+
+        @keyframes sittingBreathe {
+            0% { transform: scaleY(1); }
+            100% { transform: scaleY(1.04); } /* 앉아있는 상태에 맞춰 살짝만 들썩임 */
         }
 
         #dialogue-box {
@@ -227,55 +237,62 @@
         <rect x="580" y="20" width="15" height="50" fill="#2980b9" class="pixel-rendering"/>
 
         <!-- Diagonal Bar Counter -->
-        <!-- Top surface -->
         <polygon points="120,330 600,180 750,220 270,370" fill="#3d2314" class="pixel-rendering"/>
-        <!-- Left side surface -->
         <polygon points="120,330 270,370 270,440 120,400" fill="#1c0e07" class="pixel-rendering"/>
-        <!-- Front side surface -->
         <polygon points="270,370 750,220 750,290 270,440" fill="#24130a" class="pixel-rendering"/>
-        <!-- Counter edge highlight -->
         <polygon points="120,330 270,370 750,220 750,225 270,375 120,335" fill="#52301c" class="pixel-rendering"/>
 
-      <!-- Mr. Devil (Side View) -->
-        <g transform="translate(240, 110) scale(10)" class="sitting-breathe">
-            <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
-            <!-- ... (나머지는 그대로 유지) ... -->
+        <!-- Mr. Devil (Side View, Sitting with Beer) & Stool -->
+        <g transform="translate(240, 110) scale(10)">
+            <!-- 1. 고정되어 있는 의자 -->
             <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
             <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/>
             <rect x="12" y="33" width="8" height="1" fill="#111" class="pixel-rendering"/>
             
-            <rect x="7" y="22" width="4" height="2" fill="#9c5468" class="pixel-rendering"/>
-            <rect x="5" y="18" width="2" height="6" fill="#9c5468" class="pixel-rendering"/>
-            <rect x="6" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
-            
-            <rect x="15" y="23" width="2" height="4" fill="#753b4b" class="pixel-rendering"/>
-            
-            <rect x="10" y="16" width="10" height="9" fill="#444" class="pixel-rendering"/>
-            <rect x="16" y="17" width="4" height="7" fill="#5a5a5a" class="pixel-rendering"/>
-            
-            <rect x="11" y="22" width="7" height="3" fill="#444" class="pixel-rendering"/>
-            <rect x="16" y="25" width="2" height="4" fill="#9c5468" class="pixel-rendering"/>
-            
-            <rect x="12" y="7" width="9" height="9" fill="#444" class="pixel-rendering"/>
-            <rect x="21" y="11" width="4" height="4" fill="#444" class="pixel-rendering"/>
-            <rect x="24" y="11" width="1" height="1" fill="#000" class="pixel-rendering"/>
-            
-            <rect x="18" y="9" width="2" height="2" fill="#ff0000" class="pixel-rendering"/>
-            <rect x="19" y="9" width="1" height="1" fill="#111" class="pixel-rendering"/>
-            
-            <rect x="13" y="3" width="3" height="4" fill="#333" class="pixel-rendering"/>
-            <rect x="14" y="4" width="1" height="2" fill="#9c5468" class="pixel-rendering"/>
-            
-            <rect x="14" y="18" width="4" height="2" fill="#444" class="pixel-rendering"/>
-            <rect x="18" y="17" width="4" height="2" fill="#444" class="pixel-rendering"/>
-            <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
-            
-            <rect x="23" y="12" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
-            <rect x="24" y="13" width="3" height="3" fill="#f39c12" class="pixel-rendering"/>
-            <rect x="23" y="11" width="5" height="2" fill="#fff" class="pixel-rendering"/>
-            <rect x="23" y="13" width="1" height="1" fill="#fff" class="pixel-rendering"/>
-            <rect x="27" y="13" width="2" height="3" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
-            <rect x="28" y="14" width="1" height="1" fill="#3d2314" class="pixel-rendering"/>
+            <!-- 2. 숨쉬며 들썩거리는 쥐와 맥주 (새로운 g 태그로 묶음) -->
+            <g class="sitting-breathe">
+                <!-- Tail -->
+                <rect x="7" y="22" width="4" height="2" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="5" y="18" width="2" height="6" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="6" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
+                
+                <!-- Left Leg -->
+                <rect x="15" y="23" width="2" height="4" fill="#753b4b" class="pixel-rendering"/>
+                
+                <!-- Body -->
+                <rect x="10" y="16" width="10" height="9" fill="#444" class="pixel-rendering"/>
+                <rect x="16" y="17" width="4" height="7" fill="#5a5a5a" class="pixel-rendering"/>
+                
+                <!-- Right Leg -->
+                <rect x="11" y="22" width="7" height="3" fill="#444" class="pixel-rendering"/>
+                <rect x="16" y="25" width="2" height="4" fill="#9c5468" class="pixel-rendering"/>
+                
+                <!-- Head -->
+                <rect x="12" y="7" width="9" height="9" fill="#444" class="pixel-rendering"/>
+                <rect x="21" y="11" width="4" height="4" fill="#444" class="pixel-rendering"/>
+                <rect x="24" y="11" width="1" height="1" fill="#000" class="pixel-rendering"/>
+                
+                <!-- Eye -->
+                <rect x="18" y="9" width="2" height="2" fill="#ff0000" class="pixel-rendering"/>
+                <rect x="19" y="9" width="1" height="1" fill="#111" class="pixel-rendering"/>
+                
+                <!-- Ear -->
+                <rect x="13" y="3" width="3" height="4" fill="#333" class="pixel-rendering"/>
+                <rect x="14" y="4" width="1" height="2" fill="#9c5468" class="pixel-rendering"/>
+                
+                <!-- Arm -->
+                <rect x="14" y="18" width="4" height="2" fill="#444" class="pixel-rendering"/>
+                <rect x="18" y="17" width="4" height="2" fill="#444" class="pixel-rendering"/>
+                <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
+                
+                <!-- Beer Mug -->
+                <rect x="23" y="12" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
+                <rect x="24" y="13" width="3" height="3" fill="#f39c12" class="pixel-rendering"/>
+                <rect x="23" y="11" width="5" height="2" fill="#fff" class="pixel-rendering"/>
+                <rect x="23" y="13" width="1" height="1" fill="#fff" class="pixel-rendering"/>
+                <rect x="27" y="13" width="2" height="3" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
+                <rect x="28" y="14" width="1" height="1" fill="#3d2314" class="pixel-rendering"/>
+            </g>
         </g>
     </svg>
     
@@ -315,7 +332,7 @@
     const optionsDiv = document.getElementById('options');
     const overlay = document.getElementById('overlay');
     const youDiedText = document.getElementById('you-died');
-    const victoryText = document.getElementById('victory-text'); // VICTORY 텍스트 요소 가져오기
+    const victoryText = document.getElementById('victory-text');
     const homeBg = document.getElementById('home-bg');
     const barBg = document.getElementById('bar-bg');
     const frontDevil = document.getElementById('mr-devil');
@@ -377,7 +394,6 @@
             frontDevil.classList.add('hidden'); 
             
             setDialogue("Here's to Johnny.", [
-                // Cheers를 눌렀을 때 triggerVictory 실행으로 변경됨
                 { text: "Cheers", action: triggerVictory },
                 { text: "Who's Johnny?", action: triggerDeath }
             ]);
@@ -386,7 +402,6 @@
         }, 1000);
     }
 
-    // State: YOU DIED (Dark Souls Style)
     function triggerDeath() {
         overlay.classList.add('active'); 
         
@@ -406,22 +421,21 @@
         }, 1000);
     }
 
-    // 새로 추가된 State: VICTORY (Dark Souls Style)
     function triggerVictory() {
-        overlay.classList.add('active'); // 화면을 검게 전환
+        overlay.classList.add('active'); 
         
         setTimeout(() => {
-            victoryText.classList.add('show'); // HE THINKS YOU'RE OK 표시
+            victoryText.classList.add('show'); 
             
             setTimeout(() => {
-                victoryText.classList.remove('show'); // 텍스트 서서히 사라짐
+                victoryText.classList.remove('show'); 
                 
                 setTimeout(() => {
-                    initHome(); // 홈으로 리셋
-                    overlay.classList.remove('active'); // 검은 화면 걷어내기
+                    initHome(); 
+                    overlay.classList.remove('active'); 
                 }, 1500);
                 
-            }, 3000); // 3초 동안 문구 표시
+            }, 3000); 
             
         }, 1000);
     }
