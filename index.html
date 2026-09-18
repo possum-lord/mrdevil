@@ -193,9 +193,8 @@
             transform: scale(1);
         }
 
-        /* 💡 추가됨: 결혼 엔딩 문구 스타일 */
         #married-text {
-            color: #f1c40f; /* 황금색 */
+            color: #f1c40f; 
             font-size: clamp(30px, 8vw, 80px); 
             font-weight: 700;
             text-shadow: 2px 2px 0 #000, 0 0 25px #f39c12;
@@ -278,45 +277,75 @@
         </g>
     </svg>
 
-    <!-- 💡 추가됨: Sunset Car Background (결혼 엔딩 씬) -->
+    <!-- 💡 새로운 3인칭 시점 자동차 드라이빙 씬 -->
     <svg class="bg-layer hidden" id="sunset-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <!-- Sky & Sunset -->
-        <rect y="0" width="800" height="100" fill="#c0392b" class="pixel-rendering"/>
-        <rect y="100" width="800" height="80" fill="#d35400" class="pixel-rendering"/>
-        <rect y="180" width="800" height="80" fill="#e67e22" class="pixel-rendering"/>
-        <rect y="260" width="800" height="60" fill="#f39c12" class="pixel-rendering"/>
-        <rect x="360" y="240" width="80" height="80" fill="#f1c40f" class="pixel-rendering"/> <!-- 픽셀 태양 -->
+        <rect y="0" width="800" height="130" fill="#c0392b" class="pixel-rendering"/>
+        <rect y="130" width="800" height="50" fill="#d35400" class="pixel-rendering"/>
+        <rect y="180" width="800" height="50" fill="#e67e22" class="pixel-rendering"/>
+        <rect y="230" width="800" height="40" fill="#f39c12" class="pixel-rendering"/>
         
+        <!-- 픽셀 태양 -->
+        <rect x="350" y="200" width="100" height="90" fill="#f1c40f" class="pixel-rendering"/>
+
         <!-- Distant Mountains -->
-        <polygon points="0,320 100,250 250,320" fill="#8e44ad" class="pixel-rendering"/>
-        <polygon points="150,320 300,220 450,320" fill="#8e44ad" class="pixel-rendering"/>
-        <polygon points="350,320 550,200 750,320" fill="#8e44ad" class="pixel-rendering"/>
-        <polygon points="650,320 750,260 800,320" fill="#8e44ad" class="pixel-rendering"/>
+        <polygon points="0,320 150,210 300,320" fill="#8e44ad" class="pixel-rendering"/>
+        <polygon points="500,320 650,210 800,320" fill="#8e44ad" class="pixel-rendering"/>
         
-        <!-- Ground & Road -->
-        <rect y="320" width="800" height="280" fill="#2c3e50" class="pixel-rendering"/>
-        <polygon points="380,320 420,320 600,600 200,600" fill="#34495e" class="pixel-rendering"/>
-        <polygon points="398,320 402,320 410,600 390,600" fill="#f1c40f" class="pixel-rendering"/> <!-- 차선 -->
+        <!-- 언덕 (도로가 이 언덕 위로 넘어감) -->
+        <polygon points="0,320 400,260 800,320" fill="#2c3e50" class="pixel-rendering"/>
         
-        <!-- Car Dashboard -->
-        <rect y="480" width="800" height="120" fill="#111" class="pixel-rendering"/>
-        <rect y="470" width="800" height="10" fill="#222" class="pixel-rendering"/>
+        <!-- 사다리꼴 모양으로 좁아지는 도로 -->
+        <polygon points="380,260 420,260 750,600 50,600" fill="#34495e" class="pixel-rendering"/>
         
-        <!-- Mr Devil from behind (Driving) -->
-        <rect x="150" y="300" width="160" height="170" fill="#111" class="pixel-rendering"/> <!-- 신랑 양복 등 -->
-        <rect x="180" y="290" width="100" height="20" fill="#444" class="pixel-rendering"/> <!-- 목 -->
-        <rect x="170" y="180" width="120" height="110" fill="#444" class="pixel-rendering"/> <!-- 머리 뒷모습 -->
-        <rect x="150" y="150" width="40" height="50" fill="#333" class="pixel-rendering"/> <!-- 왼쪽 귀 -->
-        <rect x="270" y="150" width="40" height="50" fill="#333" class="pixel-rendering"/> <!-- 오른쪽 귀 -->
-        
-        <!-- Player from behind (Bridal Veil) -->
-        <rect x="480" y="240" width="140" height="230" fill="#fff" opacity="0.8" class="pixel-rendering"/> <!-- 늘어진 베일 -->
-        <rect x="510" y="200" width="80" height="80" fill="#d35400" class="pixel-rendering"/> <!-- 플레이어 머리카락 -->
-        <rect x="490" y="190" width="120" height="70" fill="#fff" opacity="0.9" class="pixel-rendering"/> <!-- 베일 머리 위 덮개 -->
-        
-        <!-- Steering Wheel -->
-        <rect x="140" y="420" width="180" height="20" fill="#222" class="pixel-rendering"/>
-        <rect x="220" y="440" width="20" height="50" fill="#222" class="pixel-rendering"/>
+        <!-- 도로 중앙선 (점선) -->
+        <polygon points="398,280 402,280 403,300 397,300" fill="#f1c40f" class="pixel-rendering"/>
+        <polygon points="396,330 404,330 406,370 394,370" fill="#f1c40f" class="pixel-rendering"/>
+        <polygon points="392,410 408,410 412,470 388,470" fill="#f1c40f" class="pixel-rendering"/>
+        <polygon points="385,530 415,530 422,600 378,600" fill="#f1c40f" class="pixel-rendering"/>
+
+        <!-- 달리는 빨간색 컨버터블 자동차 (뒷모습) -->
+        <g transform="translate(305, 360) scale(0.7)">
+            <!-- 타이어 -->
+            <rect x="25" y="90" width="40" height="40" fill="#111" class="pixel-rendering"/>
+            <rect x="205" y="90" width="40" height="40" fill="#111" class="pixel-rendering"/>
+            <rect x="35" y="120" width="200" height="15" fill="#1a252f" class="pixel-rendering"/> <!-- 바닥 그림자 -->
+
+            <!-- 자동차 바디 (트렁크 & 범퍼) -->
+            <rect x="20" y="55" width="230" height="45" fill="#c0392b" class="pixel-rendering"/>
+            <rect x="35" y="35" width="200" height="20" fill="#922b21" class="pixel-rendering"/>
+            
+            <!-- 후미등 (테일램프) -->
+            <rect x="25" y="65" width="40" height="15" fill="#ff0000" class="pixel-rendering"/>
+            <rect x="205" y="65" width="40" height="15" fill="#ff0000" class="pixel-rendering"/>
+            
+            <!-- 번호판 -->
+            <rect x="110" y="75" width="50" height="18" fill="#fff" class="pixel-rendering"/>
+            <rect x="115" y="80" width="40" height="8" fill="#333" class="pixel-rendering"/>
+
+            <!-- 내부 시트 -->
+            <rect x="50" y="-5" width="55" height="40" fill="#222" class="pixel-rendering"/>
+            <rect x="165" y="-5" width="55" height="40" fill="#222" class="pixel-rendering"/>
+
+            <!-- 전면 유리창 (뒤에서 본 모습, 투명도 있음) -->
+            <rect x="35" y="-35" width="200" height="70" fill="#5dade2" opacity="0.3" class="pixel-rendering"/>
+            <polygon points="25,-35 35,-35 35,35 15,35" fill="#222" class="pixel-rendering"/> <!-- 왼쪽 기둥 -->
+            <polygon points="235,-35 245,-35 255,35 235,35" fill="#222" class="pixel-rendering"/> <!-- 오른쪽 기둥 -->
+            <rect x="35" y="-40" width="200" height="5" fill="#222" class="pixel-rendering"/> <!-- 유리창 위쪽 테두리 -->
+
+            <!-- 왼쪽 운전석: Mr. Devil (양복 입은 쥐 뒷모습) -->
+            <rect x="65" y="-15" width="28" height="28" fill="#444" class="pixel-rendering"/> <!-- 머리 -->
+            <rect x="60" y="-28" width="10" height="16" fill="#333" class="pixel-rendering"/> <!-- 왼쪽 귀 -->
+            <rect x="88" y="-28" width="10" height="16" fill="#333" class="pixel-rendering"/> <!-- 오른쪽 귀 -->
+            <rect x="55" y="13" width="48" height="22" fill="#111" class="pixel-rendering"/> <!-- 검은색 양복 어깨 -->
+            <rect x="75" y="13" width="8" height="5" fill="#fff" class="pixel-rendering"/> <!-- 셔츠 깃 살짝 -->
+
+            <!-- 오른쪽 조수석: 플레이어 (머리카락과 웨딩 베일 뒷모습) -->
+            <rect x="175" y="-5" width="30" height="25" fill="#d35400" class="pixel-rendering"/> <!-- 머리카락 -->
+            <rect x="165" y="-20" width="50" height="45" fill="#fff" opacity="0.85" class="pixel-rendering"/> <!-- 머리를 덮은 베일 -->
+            <polygon points="215,-10 260,-15 250,25 215,30" fill="#fff" opacity="0.75" class="pixel-rendering"/> <!-- 바람에 날리는 베일 자락 -->
+            <rect x="165" y="20" width="50" height="15" fill="#eee" class="pixel-rendering"/> <!-- 하얀색 드레스 어깨 -->
+        </g>
     </svg>
     
     <!-- Mr. Devil Front View -->
@@ -338,26 +367,20 @@
         <path d="M 2 13 L 4 13 L 4 15 L 2 15 Z" fill="#000" class="pixel-rendering"/>
     </svg>
 
-    <!-- 💡 추가됨: 신랑 복장의 Mr. Devil (Groom) -->
+    <!-- Groom Devil -->
     <svg id="groom-devil" class="hidden" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
         <path d="M 23 25 L 31 25 L 31 27 L 23 27 Z" fill="#9c5468" class="pixel-rendering"/>
         <path d="M 27 23 L 29 23 L 29 25 L 27 25 Z" fill="#9c5468" class="pixel-rendering"/>
         <path d="M 19 27 L 22 27 L 22 29 L 19 29 Z" fill="#884050" class="pixel-rendering"/>
         <path d="M 11 27 L 14 27 L 14 29 L 11 29 Z" fill="#9c5468" class="pixel-rendering"/>
         
-        <!-- Base Body -->
         <path d="M 10 15 L 24 15 L 24 28 L 10 28 Z" fill="#444" class="pixel-rendering"/>
         
-        <!-- White Shirt -->
         <rect x="15" y="15" width="4" height="9" fill="#fff" class="pixel-rendering"/>
-        <!-- Red Tie -->
         <rect x="16" y="16" width="2" height="6" fill="#c0392b" class="pixel-rendering"/>
-        <!-- Suit Jacket Left -->
         <rect x="10" y="15" width="5" height="10" fill="#111" class="pixel-rendering"/>
-        <!-- Suit Jacket Right -->
         <rect x="19" y="15" width="5" height="10" fill="#111" class="pixel-rendering"/>
         
-        <!-- Head -->
         <path d="M 5 9 L 16 9 L 16 20 L 5 20 Z" fill="#444" class="pixel-rendering"/>
         <path d="M 3 13 L 5 13 L 5 18 L 3 18 Z" fill="#444" class="pixel-rendering"/>
         <path d="M 10 13 L 15 13 L 15 19 L 10 19 Z" fill="#5a5a5a" class="pixel-rendering"/>
@@ -377,7 +400,7 @@
     <div id="overlay">
         <div id="you-died">YOU DIED</div>
         <div id="victory-text">HE THINKS YOU'RE OK</div>
-        <div id="married-text">YOU ARE MARRIED TO A RAT</div>
+        <div id="married-text">YOU'RE MARRIED TO A RAT</div>
     </div>
 
 </div>
@@ -458,7 +481,6 @@
             barBg.classList.remove('hidden');
             frontDevil.classList.add('hidden'); 
             
-            // "Who's Johnny?" 클릭시 새로운 스토리 분기 연결
             setDialogue("Here's to Johnny.", [
                 { text: "Cheers", action: triggerVictory },
                 { text: "Who's Johnny?", action: johnnyStory1 } 
@@ -468,7 +490,6 @@
         }, 1000);
     }
 
-    /* --------- 새로 추가된 Johnny 스토리 흐름 --------- */
     function johnnyStory1() {
         setDialogue("Johnny was a friend of mine who left us too soon.", [
             { text: "Oh...", action: johnnyStory2 },
@@ -506,7 +527,7 @@
         setTimeout(() => {
             barBg.classList.add('hidden');
             homeBg.classList.remove('hidden'); 
-            groomDevil.classList.remove('hidden'); // 양복 입은 쥐 등장
+            groomDevil.classList.remove('hidden'); 
             
             setDialogue("What's on your mind?", [
                 { text: "..?", action: groomStory2 }
@@ -527,19 +548,16 @@
         setTimeout(() => {
             homeBg.classList.add('hidden');
             groomDevil.classList.add('hidden');
-            dialogueBox.classList.add('hidden'); // 풍경 감상을 위해 텍스트 박스 숨김
+            dialogueBox.classList.add('hidden'); 
             
-            sunsetBg.classList.remove('hidden'); // 선셋 드라이빙 배경 등장
+            sunsetBg.classList.remove('hidden'); 
             
             overlay.classList.remove('active'); 
             
-            // 2.5초간 노을 감상 후 결혼 축하 화면 띄우기
             setTimeout(triggerMarriage, 2500); 
 
         }, 1000);
     }
-    /* -------------------------------------------------- */
-
 
     function triggerDeath() {
         overlay.classList.add('active'); 
@@ -576,14 +594,13 @@
             setTimeout(() => {
                 marriedText.classList.remove('show'); 
                 setTimeout(() => {
-                    initHome(); // 모든 상태 초기화하고 홈으로 복귀
+                    initHome(); 
                     overlay.classList.remove('active'); 
                 }, 1500);
             }, 3000); 
         }, 1000);
     }
 
-    // 게임 시작
     initHome();
 </script>
 </body>
