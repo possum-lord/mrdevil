@@ -179,7 +179,7 @@
         <rect x="200" y="300" width="40" height="20" fill="#222" class="pixel-rendering"/>
     </svg>
 
-    <!-- Bar Background -->
+<!-- Bar Background -->
     <svg class="bg-layer hidden" id="bar-bg" width="800" height="600" xmlns="http://www.w3.org/2000/svg">
         <!-- Wall -->
         <rect width="800" height="600" fill="#140a08" class="pixel-rendering"/>
@@ -196,16 +196,16 @@
 
         <!-- Diagonal Bar Counter -->
         <!-- Top surface -->
-        <polygon points="0,450 550,250 700,300 150,500" fill="#3d2314" class="pixel-rendering"/>
+        <polygon points="0,350 550,200 700,250 150,400" fill="#3d2314" class="pixel-rendering"/>
         <!-- Left side surface -->
-        <polygon points="0,450 150,500 150,600 0,600" fill="#1c0e07" class="pixel-rendering"/>
+        <polygon points="0,350 150,400 150,480 0,430" fill="#1c0e07" class="pixel-rendering"/>
         <!-- Front side surface -->
-        <polygon points="150,500 700,300 700,600 150,600" fill="#24130a" class="pixel-rendering"/>
+        <polygon points="150,400 700,250 700,330 150,480" fill="#24130a" class="pixel-rendering"/>
         <!-- Counter edge highlight -->
-        <polygon points="0,450 550,250 550,255 0,455" fill="#52301c" class="pixel-rendering"/>
+        <polygon points="0,350 150,400 700,250 700,255 150,405 0,355" fill="#52301c" class="pixel-rendering"/>
 
         <!-- Mr. Devil (Side View, Sitting with Beer) & Stool -->
-        <g transform="translate(130, 150) scale(11)">
+        <g transform="translate(40, 160) scale(11)">
             <!-- Stool -->
             <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/> <!-- Seat -->
             <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/> <!-- Leg -->
@@ -240,20 +240,21 @@
             <rect x="13" y="3" width="3" height="4" fill="#333" class="pixel-rendering"/>
             <rect x="14" y="4" width="1" height="2" fill="#9c5468" class="pixel-rendering"/>
             
-            <!-- Arm -->
-            <rect x="14" y="18" width="8" height="2" fill="#444" class="pixel-rendering"/>
-            <rect x="22" y="18" width="2" height="2" fill="#9c5468" class="pixel-rendering"/> <!-- Hand -->
+            <!-- Arm (Adjusted to reach the table) -->
+            <rect x="14" y="18" width="4" height="2" fill="#444" class="pixel-rendering"/>
+            <rect x="18" y="17" width="4" height="2" fill="#444" class="pixel-rendering"/>
+            <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/> <!-- Hand -->
             
-            <!-- Beer Mug -->
-            <rect x="23" y="15" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/> <!-- Glass -->
-            <rect x="24" y="16" width="3" height="3" fill="#f39c12" class="pixel-rendering"/> <!-- Liquid -->
-            <rect x="23" y="14" width="5" height="2" fill="#fff" class="pixel-rendering"/> <!-- Foam -->
-            <rect x="23" y="16" width="1" height="1" fill="#fff" class="pixel-rendering"/> <!-- Foam drip -->
-            <rect x="27" y="16" width="2" height="3" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/> <!-- Handle -->
-            <rect x="28" y="17" width="1" height="1" fill="#24130a" class="pixel-rendering"/> <!-- Handle hole (matches background) -->
+            <!-- Beer Mug (Placed firmly on the table) -->
+            <rect x="23" y="12" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/> <!-- Glass -->
+            <rect x="24" y="13" width="3" height="3" fill="#f39c12" class="pixel-rendering"/> <!-- Liquid -->
+            <rect x="23" y="11" width="5" height="2" fill="#fff" class="pixel-rendering"/> <!-- Foam -->
+            <rect x="23" y="13" width="1" height="1" fill="#fff" class="pixel-rendering"/> <!-- Foam drip -->
+            <rect x="27" y="13" width="2" height="3" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/> <!-- Handle -->
+            <rect x="28" y="14" width="1" height="1" fill="#3d2314" class="pixel-rendering"/> <!-- Handle hole (matches table color) -->
         </g>
     </svg>
-
+    
     <!-- Mr. Devil SVG Character -->
     <svg id="mr-devil" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
         <!-- Tail -->
