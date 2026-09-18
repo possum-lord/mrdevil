@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date with Mr.Devil</title>
-<style>
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
 
         * { box-sizing: border-box; }
@@ -22,18 +22,16 @@
             overflow: hidden;
         }
 
-<div id="game-container">
-    <!-- 💡 추가됨: 게임 그래픽 요소들을 묶는 컨테이너 -->
-    <div id="game-view">
-        <svg id="home-bg"> ... </svg>
-        <svg id="bar-bg"> ... </svg>
-        <svg id="mr-devil"> ... </svg>
-    </div>
-    
-    <!-- 텍스트 박스는 game-view 아래에 위치 -->
-    <div id="dialogue-box"> ... </div>
-    <div id="overlay"> ... </div>
-</div>
+        #game-container {
+            width: 100vw;
+            max-width: 800px;
+            aspect-ratio: 4 / 3; 
+            background: #111;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
 
         /* 📱 모바일 전용 세팅 */
         @media (max-width: 600px) {
@@ -41,10 +39,8 @@
                 aspect-ratio: 3 / 4.5; 
             }
             #mr-devil {
-                /* 💡 텍스트 박스 높이가 가변적이므로, 아래쪽 기준(bottom)이 아닌 게임 화면 위쪽(top) 기준으로 쥐 위치 고정 */
-                bottom: auto !important; 
-                top: 40% !important; 
-                transform: translate(-50%, -50%) !important;
+                /* 텍스트 박스에 가려지지 않게 모바일에서는 쥐를 더 높이 배치 */
+                bottom: 35% !important; 
                 width: 55% !important; 
             }
             #dialogue-box {
@@ -64,14 +60,6 @@
             z-index: 15;
         }
 
-        /* 💡 게임 그래픽이 들어가는 메인 화면 영역 (텍스트 박스 제외한 나머지 공간 채움) */
-        #game-view {
-            flex-grow: 1; /* 텍스트 박스가 남긴 공간을 모두 차지함 */
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-        }
-
         .bg-layer {
             position: absolute;
             top: 0; left: 0;
@@ -85,31 +73,30 @@
         /* ---------------- 홈 화면의 서있는 쥐 ---------------- */
         #mr-devil {
             position: absolute;
-            /* 💡 bottom 대신 top과 transform을 사용해 화면 중앙부에 안정적으로 배치 */
-            bottom: auto;
-            top: 55%;
+            bottom: 26%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             width: 45%; 
             height: auto;
             z-index: 5;
         }
 
-        /* ---------------- 💡 수정됨: 텍스트 박스 스타일 ---------------- */
+        /* ---------------- 텍스트 박스 (다시 하단 고정 방식) ---------------- */
         #dialogue-box {
-            /* 💡 절대 위치(absolute) 제거, Flexbox 흐름에 따라 자연스럽게 하단에 배치됨 */
-            position: relative; 
+            position: absolute;
+            bottom: 0; left: 0;
             width: 100%; 
             min-height: 28%;
-            height: auto; /* 내용물에 따라 높이 자동 조절 */
-            background: #000; /* 💡 배경을 완전한 검은색으로 채워 어긋남 방지 (기존 #1a1a1a) */
-            border-top: 4px solid #fff; /* 💡 위쪽 하얀색 테두리 */
+            height: auto; 
+            background: #050505; /* 💡 튀어보이지 않게 아주 짙은 검정 배경 사용 */
+            border-top: 4px solid #fff; 
             padding: 20px 20px 30px 20px; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             gap: 20px; 
-            z-index: 20; /* 💡 스캔라인(게임컨테이너 ::after)보다 위로 올려 텍스트 가독성 확보 */
+            /* 스캔라인보다 위로 올려 텍스트 가독성 확보 */
+            z-index: 20; 
         }
 
         #dialogue-text {
@@ -143,12 +130,13 @@
             color: #000;
         }
 
+        /* 오버레이 효과 (죽음, 승리 텍스트) */
         #overlay {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: #000;
-            z-index: 30; /* 💡 오버레이 z-index 상향 조정 */
+            z-index: 30; 
             opacity: 0;
             pointer-events: none;
             transition: opacity 1s ease-in-out;
@@ -203,20 +191,21 @@
 
 <div id="game-container">
     
-    <!-- Home Background -->
+    <!-- Home Background (수정됨: 벽과 바닥 색상 통일) -->
     <svg class="bg-layer" id="home-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-        <!-- Wall -->
-        <rect width="800" height="400" fill="#2d2d2d" class="pixel-rendering"/>
-        <!-- Floor -->
-        <rect y="400" width="800" height="200" fill="#1e1e1e" class="pixel-rendering"/>
+        <!-- 배경 1장으로 통일 (회색) -->
+        <rect width="800" height="600" fill="#262626" class="pixel-rendering"/>
         
-        <!-- 💡 수정됨: 모바일에서 잘리지 않도록 벽돌들을 화면 중앙(x:200~600)으로 모음 -->
-        <rect x="280" y="100" width="50" height="20" fill="#222" class="pixel-rendering"/>
-        <rect x="360" y="140" width="70" height="20" fill="#222" class="pixel-rendering"/>
-        <rect x="480" y="110" width="40" height="20" fill="#222" class="pixel-rendering"/>
-        <rect x="520" y="220" width="60" height="20" fill="#222" class="pixel-rendering"/>
-        <rect x="250" y="280" width="45" height="20" fill="#222" class="pixel-rendering"/>
-        <rect x="410" y="320" width="55" height="20" fill="#222" class="pixel-rendering"/>
+        <!-- 회색 음영 벽돌 패턴들 -->
+        <rect x="280" y="100" width="50" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="360" y="140" width="70" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="480" y="110" width="40" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="520" y="220" width="60" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="250" y="280" width="45" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="410" y="320" width="55" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <!-- 텍스트 박스 근처 아래쪽 벽돌 추가 -->
+        <rect x="180" y="420" width="60" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="550" y="450" width="40" height="20" fill="#1c1c1c" class="pixel-rendering"/>
     </svg>
     
     <!-- Bar Background -->
@@ -226,7 +215,7 @@
         <!-- Floor -->
         <polygon points="0,280 800,120 800,600 0,600" fill="#080402" class="pixel-rendering"/>
         
-        <!-- 💡 수정됨: 바 공간 사물들을 0.75배로 축소해 광각 렌즈로 멀리서 찍은 것처럼 만듦 -->
+        <!-- 광각 렌즈 효과 (0.75배 축소) -->
         <g transform="translate(80, 100) scale(0.75)">
             <!-- Shelf in background -->
             <polygon points="180,120 680,40 680,55 180,135" fill="#0a0504" class="pixel-rendering"/>
@@ -242,7 +231,7 @@
             <polygon points="270,370 750,220 750,290 270,440" fill="#24130a" class="pixel-rendering"/>
             <polygon points="120,330 270,370 750,220 750,225 270,375 120,335" fill="#52301c" class="pixel-rendering"/>
 
-            <!-- Mr. Devil (Side View, Sitting with Beer) & Stool - 애니메이션 완전히 제거됨 -->
+            <!-- Mr. Devil (Side View, Sitting with Beer) -->
             <g transform="translate(240, 110) scale(10)">
                 <!-- Stool -->
                 <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
@@ -313,6 +302,7 @@
         <path d="M 2 13 L 4 13 L 4 15 L 2 15 Z" fill="#000" class="pixel-rendering"/>
     </svg>
 
+    <!-- 텍스트 박스가 화면 바닥에 다시 위치함 -->
     <div id="dialogue-box">
         <p id="dialogue-text"></p>
         <div id="options"></div>
@@ -323,6 +313,7 @@
         <div id="you-died">YOU DIED</div>
         <div id="victory-text">HE THINKS YOU'RE OK</div>
     </div>
+
 </div>
 
 <script>
