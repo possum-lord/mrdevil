@@ -22,18 +22,18 @@
             overflow: hidden;
         }
 
-        #game-container {
-            width: 100vw;
-            max-width: 800px;
-            aspect-ratio: 4 / 3; 
-            background: #111;
-            position: relative;
-            overflow: hidden;
-            border: 4px solid #333;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            display: flex;         /* 💡 자식 요소들을 유연하게 배치하기 위해 Flexbox 추가 */
-            flex-direction: column; /* 💡 수직 방향으로 배치 (게임화면 상단, 텍스트박스 하단) */
-        }
+<div id="game-container">
+    <!-- 💡 추가됨: 게임 그래픽 요소들을 묶는 컨테이너 -->
+    <div id="game-view">
+        <svg id="home-bg"> ... </svg>
+        <svg id="bar-bg"> ... </svg>
+        <svg id="mr-devil"> ... </svg>
+    </div>
+    
+    <!-- 텍스트 박스는 game-view 아래에 위치 -->
+    <div id="dialogue-box"> ... </div>
+    <div id="overlay"> ... </div>
+</div>
 
         /* 📱 모바일 전용 세팅 */
         @media (max-width: 600px) {
