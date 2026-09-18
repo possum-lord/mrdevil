@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date with Mr.Devil</title>
-    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
+    <!-- 여기에 반드시 style 태그가 있어야 합니다! -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
 
         * { box-sizing: border-box; }
 
@@ -21,11 +23,10 @@
             overflow: hidden;
         }
 
-        /* 💡 수정됨: 4:3 비율 고정 및 반응형 크기 */
         #game-container {
             width: 100vw;
             max-width: 800px;
-            aspect-ratio: 4 / 3; /* 어떤 화면이든 800x600 비율 유지 */
+            aspect-ratio: 4 / 3;
             background: #111;
             position: relative;
             overflow: hidden;
@@ -44,7 +45,6 @@
             z-index: 15;
         }
 
-        /* 💡 수정됨: 배경 꽉 채우기 */
         .bg-layer {
             position: absolute;
             top: 0; left: 0;
@@ -55,13 +55,12 @@
 
         .pixel-rendering { shape-rendering: crispEdges; }
 
-        /* 💡 수정됨: 고정 px를 %로 변경하여 화면에 맞게 축소/확대됨 */
         #mr-devil {
             position: absolute;
-            bottom: 26%; /* 텍스트 박스 바로 위에 위치 */
+            bottom: 26%;
             left: 50%;
             transform: translateX(-50%);
-            width: 35%; /* 화면 폭에 비례한 크기 */
+            width: 35%;
             height: auto;
             animation: breathe 2s infinite alternate ease-in-out;
             z-index: 5;
@@ -72,7 +71,6 @@
             100% { transform: translateX(-50%) scaleY(1.04); }
         }
 
-        /* 💡 수정됨: 높이와 패딩을 %로 변경 */
         #dialogue-box {
             position: absolute;
             bottom: 0; left: 0;
@@ -87,7 +85,6 @@
             z-index: 10;
         }
 
-        /* 💡 수정됨: 화면 크기에 맞춰 폰트 사이즈 자동 조절 */
         #dialogue-text {
             font-size: clamp(16px, 3.5vw, 28px);
             color: #eee;
@@ -153,6 +150,7 @@
             opacity: 1;
             transform: scale(1);
         }
+    </style>
 </head>
 <body>
 
@@ -172,8 +170,8 @@
         <rect x="200" y="300" width="40" height="20" fill="#222" class="pixel-rendering"/>
     </svg>
     
-<!-- Bar Background -->
-    <svg class="bg-layer hidden" id="bar-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <!-- Bar Background -->
+    <svg class="bg-layer hidden" id="bar-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <!-- Wall -->
         <rect width="800" height="600" fill="#140a08" class="pixel-rendering"/>
         <!-- Floor -->
@@ -187,7 +185,7 @@
         <rect x="490" y="35" width="20" height="35" fill="#e67e22" class="pixel-rendering"/>
         <rect x="580" y="20" width="15" height="50" fill="#2980b9" class="pixel-rendering"/>
 
-        <!-- Diagonal Bar Counter (Centered Composition) -->
+        <!-- Diagonal Bar Counter -->
         <!-- Top surface -->
         <polygon points="120,330 600,180 750,220 270,370" fill="#3d2314" class="pixel-rendering"/>
         <!-- Left side surface -->
@@ -197,46 +195,46 @@
         <!-- Counter edge highlight -->
         <polygon points="120,330 270,370 750,220 750,225 270,375 120,335" fill="#52301c" class="pixel-rendering"/>
 
-        <!-- Mr. Devil (Centered at x: 230~480, Sitting with Beer) & Stool -->
+        <!-- Mr. Devil (Side View, Sitting with Beer) & Stool -->
         <g transform="translate(240, 110) scale(10)">
             <!-- Stool -->
-            <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/> <!-- Seat -->
-            <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/> <!-- Leg -->
-            <rect x="12" y="33" width="8" height="1" fill="#111" class="pixel-rendering"/> <!-- Base -->
+            <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
+            <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/>
+            <rect x="12" y="33" width="8" height="1" fill="#111" class="pixel-rendering"/>
             
             <!-- Tail -->
             <rect x="7" y="22" width="4" height="2" fill="#9c5468" class="pixel-rendering"/>
             <rect x="5" y="18" width="2" height="6" fill="#9c5468" class="pixel-rendering"/>
             <rect x="6" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
             
-            <!-- Left Leg (Behind) -->
+            <!-- Left Leg -->
             <rect x="15" y="23" width="2" height="4" fill="#753b4b" class="pixel-rendering"/>
             
             <!-- Body -->
             <rect x="10" y="16" width="10" height="9" fill="#444" class="pixel-rendering"/>
-            <rect x="16" y="17" width="4" height="7" fill="#5a5a5a" class="pixel-rendering"/> <!-- Belly -->
+            <rect x="16" y="17" width="4" height="7" fill="#5a5a5a" class="pixel-rendering"/>
             
-            <!-- Right Leg (Front) -->
-            <rect x="11" y="22" width="7" height="3" fill="#444" class="pixel-rendering"/> <!-- Thigh -->
-            <rect x="16" y="25" width="2" height="4" fill="#9c5468" class="pixel-rendering"/> <!-- Calf/Foot -->
+            <!-- Right Leg -->
+            <rect x="11" y="22" width="7" height="3" fill="#444" class="pixel-rendering"/>
+            <rect x="16" y="25" width="2" height="4" fill="#9c5468" class="pixel-rendering"/>
             
             <!-- Head -->
             <rect x="12" y="7" width="9" height="9" fill="#444" class="pixel-rendering"/>
-            <rect x="21" y="11" width="4" height="4" fill="#444" class="pixel-rendering"/> <!-- Snout -->
-            <rect x="24" y="11" width="1" height="1" fill="#000" class="pixel-rendering"/> <!-- Nose -->
+            <rect x="21" y="11" width="4" height="4" fill="#444" class="pixel-rendering"/>
+            <rect x="24" y="11" width="1" height="1" fill="#000" class="pixel-rendering"/>
             
             <!-- Eye -->
             <rect x="18" y="9" width="2" height="2" fill="#ff0000" class="pixel-rendering"/>
-            <rect x="19" y="9" width="1" height="1" fill="#111" class="pixel-rendering"/> <!-- Pupil -->
+            <rect x="19" y="9" width="1" height="1" fill="#111" class="pixel-rendering"/>
             
             <!-- Ear -->
             <rect x="13" y="3" width="3" height="4" fill="#333" class="pixel-rendering"/>
             <rect x="14" y="4" width="1" height="2" fill="#9c5468" class="pixel-rendering"/>
             
-            <!-- Arm reaching table -->
+            <!-- Arm -->
             <rect x="14" y="18" width="4" height="2" fill="#444" class="pixel-rendering"/>
             <rect x="18" y="17" width="4" height="2" fill="#444" class="pixel-rendering"/>
-            <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/> <!-- Hand -->
+            <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
             
             <!-- Beer Mug -->
             <rect x="23" y="12" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
@@ -248,86 +246,70 @@
         </g>
     </svg>
     
-    <!-- Mr. Devil SVG Character -->
+    <!-- Mr. Devil Front View -->
     <svg id="mr-devil" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-        <!-- Tail -->
         <path d="M 23 25 L 31 25 L 31 27 L 23 27 Z" fill="#9c5468" class="pixel-rendering"/>
         <path d="M 27 23 L 29 23 L 29 25 L 27 25 Z" fill="#9c5468" class="pixel-rendering"/>
-        <!-- Back Leg -->
         <path d="M 19 27 L 22 27 L 22 29 L 19 29 Z" fill="#884050" class="pixel-rendering"/>
-        <!-- Body -->
         <path d="M 10 15 L 24 15 L 24 28 L 10 28 Z" fill="#444" class="pixel-rendering"/>
         <path d="M 8 17 L 10 17 L 10 26 L 8 26 Z" fill="#444" class="pixel-rendering"/>
-        <path d="M 12 18 L 22 18 L 22 28 L 12 28 Z" fill="#5a5a5a" class="pixel-rendering"/> <!-- Belly -->
-        <!-- Front Leg -->
+        <path d="M 12 18 L 22 18 L 22 28 L 12 28 Z" fill="#5a5a5a" class="pixel-rendering"/>
         <path d="M 11 27 L 14 27 L 14 29 L 11 29 Z" fill="#9c5468" class="pixel-rendering"/>
-        <!-- Head -->
         <path d="M 5 9 L 16 9 L 16 20 L 5 20 Z" fill="#444" class="pixel-rendering"/>
-        <path d="M 3 13 L 5 13 L 5 18 L 3 18 Z" fill="#444" class="pixel-rendering"/> <!-- Snout -->
-        <path d="M 10 13 L 15 13 L 15 19 L 10 19 Z" fill="#5a5a5a" class="pixel-rendering"/> <!-- Cheek -->
-        <!-- Ear -->
+        <path d="M 3 13 L 5 13 L 5 18 L 3 18 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 10 13 L 15 13 L 15 19 L 10 19 Z" fill="#5a5a5a" class="pixel-rendering"/>
         <path d="M 13 4 L 18 4 L 18 10 L 13 10 Z" fill="#333" class="pixel-rendering"/>
         <path d="M 14 5 L 17 5 L 17 9 L 14 9 Z" fill="#9c5468" class="pixel-rendering"/>
-        <!-- Eye -->
         <path d="M 7 11 L 9 11 L 9 13 L 7 13 Z" fill="#ff0000" class="pixel-rendering"/>
-        <path d="M 8 11 L 9 11 L 9 12 L 8 12 Z" fill="#111" class="pixel-rendering"/> <!-- Pupil -->
-        <!-- Nose -->
+        <path d="M 8 11 L 9 11 L 9 12 L 8 12 Z" fill="#111" class="pixel-rendering"/>
         <path d="M 2 13 L 4 13 L 4 15 L 2 15 Z" fill="#000" class="pixel-rendering"/>
     </svg>
 
-    <!-- Text Box Area -->
     <div id="dialogue-box">
         <p id="dialogue-text"></p>
         <div id="options"></div>
     </div>
 
-    <!-- Black Screen & Death Overlay -->
     <div id="overlay">
         <div id="you-died">YOU DIED</div>
     </div>
-
 </div>
 
 <script>
-    // Game Elements
     const dialogueText = document.getElementById('dialogue-text');
     const optionsDiv = document.getElementById('options');
     const overlay = document.getElementById('overlay');
     const youDiedText = document.getElementById('you-died');
     const homeBg = document.getElementById('home-bg');
     const barBg = document.getElementById('bar-bg');
+    const frontDevil = document.getElementById('mr-devil');
 
-    // Utility to show text and buttons
     function setDialogue(text, options) {
         dialogueText.innerText = text;
-        optionsDiv.innerHTML = ''; // clear old buttons
+        optionsDiv.innerHTML = ''; 
         
         options.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.innerText = opt.text;
             btn.onclick = () => {
-                optionsDiv.innerHTML = ''; // Prevent double clicking
+                optionsDiv.innerHTML = ''; 
                 opt.action();
             };
             optionsDiv.appendChild(btn);
         });
     }
 
-   // State 1: Main Home Screen
     function initHome() {
         homeBg.classList.remove('hidden');
         barBg.classList.add('hidden');
-        
-        // 추가된 부분: 메인 화면으로 오면 다시 기존 쥐를 보여줍니다.
-        document.getElementById('mr-devil').classList.remove('hidden'); 
+        frontDevil.classList.remove('hidden'); 
         
         setDialogue("Mr.Devil is sitting quietly.", [
             { text: "Talk", action: talkToDevil }
         ]);
     }
 
-    // State 2: Talk Interaction
     function talkToDevil() {
         setDialogue("How's it going today?", [
             { text: "OK", action: () => {
@@ -350,28 +332,23 @@
         ]);
     }
 
-// State 3: The Bar Scene
     function transitionToBar() {
-        overlay.classList.add('active'); // fade out
+        overlay.classList.add('active'); 
         
         setTimeout(() => {
-            // Swap backgrounds while screen is black
             homeBg.classList.add('hidden');
             barBg.classList.remove('hidden');
-            
-            // 추가된 부분: Bar 씬에서는 원래 서있던 앞모습 쥐를 숨깁니다.
-            document.getElementById('mr-devil').classList.add('hidden'); 
+            frontDevil.classList.add('hidden'); 
             
             setDialogue("Here's to Johnny.", [
                 { text: "Cheers", action: transitionToHome },
                 { text: "Who's Johnny?", action: triggerDeath }
             ]);
             
-            overlay.classList.remove('active'); // fade in
+            overlay.classList.remove('active'); 
         }, 1000);
     }
 
-    // State 4: Return home safely from Bar
     function transitionToHome() {
         overlay.classList.add('active');
         setTimeout(() => {
@@ -380,29 +357,26 @@
         }, 1000);
     }
 
-    // State 5: YOU DIED (Dark Souls Style)
     function triggerDeath() {
-        overlay.classList.add('active'); // Fade to black
+        overlay.classList.add('active'); 
         
         setTimeout(() => {
-            youDiedText.classList.add('show'); // Show YOU DIED text
+            youDiedText.classList.add('show'); 
             
             setTimeout(() => {
-                youDiedText.classList.remove('show'); // Fade out text
+                youDiedText.classList.remove('show'); 
                 
                 setTimeout(() => {
-                    initHome(); // Reset game
-                    overlay.classList.remove('active'); // Fade back in to home
+                    initHome(); 
+                    overlay.classList.remove('active'); 
                 }, 1500);
                 
-            }, 3000); // Time to display YOU DIED
+            }, 3000); 
             
         }, 1000);
     }
 
-    // Boot game
     initHome();
-
 </script>
 </body>
 </html>
