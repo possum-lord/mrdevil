@@ -22,17 +22,26 @@
             overflow: hidden;
         }
 
-#game-container {
+        /* 기본 컨테이너 (PC 화면용 비율 4:3) */
+        #game-container {
             width: 100vw;
             max-width: 800px;
-            /* 기존 aspect-ratio: 4 / 3; 대신 아래처럼 비율을 약간 높이거나, 모바일 친화적으로 변경 */
-            aspect-ratio: 16 / 13; /* 모바일에서 위아래로 더 넉넉하게 보입니다 */
-            max-height: 90vh; /* 화면 밖으로 너무 길어지는 것 방지 */
+            aspect-ratio: 4 / 3; 
             background: #111;
             position: relative;
             overflow: hidden;
             border: 4px solid #333;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* 💡 추가됨: 스마트폰(가로폭 600px 이하)일 경우 화면을 세로로 길게 만듭니다 */
+        @media (max-width: 600px) {
+            #game-container {
+                aspect-ratio: 3 / 4.5; /* 모바일에서 위아래 공간을 아주 넉넉하게 확보 */
+            }
+            #mr-devil {
+                bottom: 30% !important; /* 모바일에서는 박스가 커지므로 쥐의 위치를 조금 올림 */
+            }
         }
 
         #game-container::after {
@@ -72,34 +81,35 @@
             100% { transform: translateX(-50%) scaleY(1.04); }
         }
 
-#dialogue-box {
+        /* 💡 수정됨: 하단 여백 추가, 텍스트-버튼 간격 증가, 자동 높이 조절 */
+        #dialogue-box {
             position: absolute;
             bottom: 0; left: 0;
             width: 100%; 
-            /* height: 26%; 대신 min-height를 사용하여 내용이 많으면 박스가 위로 커지게 함 */
-            min-height: 28%; 
-            height: auto; /* 내용물에 따라 높이 자동 조절 */
+            min-height: 28%;
+            height: auto; /* 내용물이 많으면 위로 커지도록 설정 */
             background: #1a1a1a;
             border-top: 4px solid #fff;
-            padding: 4%;
+            padding: 20px 20px 30px 20px; /* 아래쪽(30px) 패딩을 넉넉하게 주어 잘림 방지 */
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* 텍스트가 위에서부터 차곡차곡 쌓이게 */
-            gap: 15px; /* 텍스트와 버튼 사이 간격 추가 */
+            justify-content: flex-start;
+            gap: 20px; /* 텍스트와 버튼 사이를 넓게 띄움 */
             z-index: 10;
         }
 
         #dialogue-text {
-            font-size: clamp(16px, 3.5vw, 28px);
+            font-size: clamp(16px, 4vw, 28px);
             color: #eee;
             margin: 0;
-            line-height: 1.2;
+            line-height: 1.4; /* 글씨 줄 간격을 넓혀 답답하지 않게 조절 */
         }
 
         #options {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             flex-wrap: wrap;
+            padding-bottom: 5px; /* 버튼 아래쪽 추가 안전 여백 */
         }
 
         .option-btn {
@@ -107,8 +117,8 @@
             border: 2px solid #fff;
             color: #fff;
             font-family: 'Pixelify Sans', sans-serif;
-            font-size: clamp(12px, 2.5vw, 20px);
-            padding: 2% 4%;
+            font-size: clamp(14px, 3.5vw, 20px);
+            padding: 8px 16px; /* 버튼 크기도 px로 고정하여 모양 유지 */
             cursor: pointer;
             transition: all 0.2s;
             text-transform: uppercase;
@@ -140,7 +150,6 @@
             pointer-events: all;
         }
 
-        /* YOU DIED 스타일 */
         #you-died {
             color: #8b0000;
             font-size: clamp(40px, 10vw, 90px);
@@ -158,10 +167,9 @@
             transform: scale(1);
         }
 
-        /* 새로 추가된 VICTORY 스타일 */
         #victory-text {
-            color: #2ecc71; /* 네온 초록색 */
-            font-size: clamp(24px, 6vw, 60px); /* 텍스트가 길어서 살짝 작게 조정 */
+            color: #2ecc71;
+            font-size: clamp(24px, 6vw, 60px); 
             font-weight: 700;
             text-shadow: 2px 2px 0 #000, 0 0 25px #27ae60;
             opacity: 0;
