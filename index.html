@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date with Mr.Devil</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Pixelify Sans', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            user-select: none;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 800px;
+            height: 600px;
+            background: #111;
+            position: relative;
+            overflow: hidden;
+            border: 4px solid #333;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Scanline effect for rough retro look */
+        #game-container::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .bg-layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* SVG Pixel Rendering */
+        .pixel-rendering {
+            shape-rendering: crispEdges;
+        }
+
+        /* Mr. Devil Animation */
+        #mr-devil {
+            position: absolute;
+            bottom: 140px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            animation: breathe 2s infinite alternate ease-in-out;
+            z-index: 5;
+        }
+
+        @keyframes breathe {
+            0% { transform: translateX(-50%) scaleY(1); }
+            100% { transform: translateX(-50%) scaleY(1.04); }
+        }
+
+        /* Dialogue UI */
+        #dialogue-box {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 160px;
+            background: #1a1a1a;
+            border-top: 4px solid #fff;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        #dialogue-text {
+            font-size: 28px;
+            color: #eee;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        #options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            background: #000;
+            border: 2px solid #fff;
+            color: #fff;
+            font-family: 'Pixelify Sans', sans-serif;
+            font-size: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .option-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Transition Overlay and YOU DIED */
+        #overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #you-died {
+            color: #8b0000;
+            font-size: 90px;
+            font-weight: 700;
+            text-shadow: 2px 2px 0 #000, 0 0 25px #ff0000;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 3s ease-in-out;
+            display: none;
+        }
+
+        #you-died.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    
+    <!-- Home Background -->
+    <svg class="bg-layer" id="home-bg" width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+        <!-- Wall -->
+        <rect width="800" height="400" fill="#2d2d2d" class="pixel-rendering"/>
+        <!-- Floor -->
+        <rect y="400" width="800" height="200" fill="#1e1e1e" class="pixel-rendering"/>
+        <!-- Rough brick details -->
+        <rect x="50" y="80" width="40" height="20" fill="#222" class="pixel-rendering"/>
+        <rect x="100" y="100" width="60" height="20" fill="#222" class="pixel-rendering"/>
+        <rect x="600" y="150" width="80" height="20" fill="#222" class="pixel-rendering"/>
+        <rect x="650" y="170" width="40" height="20" fill="#222" class="pixel-rendering"/>
+        <rect x="200" y="300" width="40" height="20" fill="#222" class="pixel-rendering"/>
+    </svg>
+
+    <!-- Bar Background -->
+    <svg class="bg-layer hidden" id="bar-bg" width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+        <!-- Wall -->
+        <rect width="800" height="400" fill="#140a08" class="pixel-rendering"/>
+        <!-- Floor -->
+        <rect y="400" width="800" height="200" fill="#080402" class="pixel-rendering"/>
+        <!-- Shelf in background -->
+        <rect x="150" y="220" width="500" height="15" fill="#0a0504" class="pixel-rendering"/>
+        <!-- Bottles -->
+        <rect x="250" y="150" width="25" height="70" fill="#27ae60" class="pixel-rendering"/>
+        <rect x="290" y="120" width="20" height="100" fill="#8e44ad" class="pixel-rendering"/>
+        <rect x="500" y="160" width="35" height="60" fill="#e67e22" class="pixel-rendering"/>
+        <rect x="550" y="130" width="25" height="90" fill="#2980b9" class="pixel-rendering"/>
+        <rect x="580" y="170" width="20" height="50" fill="#c0392b" class="pixel-rendering"/>
+        <!-- Bar Counter -->
+        <rect x="0" y="380" width="800" height="80" fill="#2b1710" class="pixel-rendering"/>
+        <rect x="0" y="380" width="800" height="15" fill="#42251a" class="pixel-rendering"/>
+    </svg>
+
+    <!-- Mr. Devil SVG Character -->
+    <svg id="mr-devil" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <!-- Tail -->
+        <path d="M 23 25 L 31 25 L 31 27 L 23 27 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 27 23 L 29 23 L 29 25 L 27 25 Z" fill="#9c5468" class="pixel-rendering"/>
+        <!-- Back Leg -->
+        <path d="M 19 27 L 22 27 L 22 29 L 19 29 Z" fill="#884050" class="pixel-rendering"/>
+        <!-- Body -->
+        <path d="M 10 15 L 24 15 L 24 28 L 10 28 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 8 17 L 10 17 L 10 26 L 8 26 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 12 18 L 22 18 L 22 28 L 12 28 Z" fill="#5a5a5a" class="pixel-rendering"/> <!-- Belly -->
+        <!-- Front Leg -->
+        <path d="M 11 27 L 14 27 L 14 29 L 11 29 Z" fill="#9c5468" class="pixel-rendering"/>
+        <!-- Head -->
+        <path d="M 5 9 L 16 9 L 16 20 L 5 20 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 3 13 L 5 13 L 5 18 L 3 18 Z" fill="#444" class="pixel-rendering"/> <!-- Snout -->
+        <path d="M 10 13 L 15 13 L 15 19 L 10 19 Z" fill="#5a5a5a" class="pixel-rendering"/> <!-- Cheek -->
+        <!-- Ear -->
+        <path d="M 13 4 L 18 4 L 18 10 L 13 10 Z" fill="#333" class="pixel-rendering"/>
+        <path d="M 14 5 L 17 5 L 17 9 L 14 9 Z" fill="#9c5468" class="pixel-rendering"/>
+        <!-- Eye -->
+        <path d="M 7 11 L 9 11 L 9 13 L 7 13 Z" fill="#ff0000" class="pixel-rendering"/>
+        <path d="M 8 11 L 9 11 L 9 12 L 8 12 Z" fill="#111" class="pixel-rendering"/> <!-- Pupil -->
+        <!-- Nose -->
+        <path d="M 2 13 L 4 13 L 4 15 L 2 15 Z" fill="#000" class="pixel-rendering"/>
+    </svg>
+
+    <!-- Text Box Area -->
+    <div id="dialogue-box">
+        <p id="dialogue-text"></p>
+        <div id="options"></div>
+    </div>
+
+    <!-- Black Screen & Death Overlay -->
+    <div id="overlay">
+        <div id="you-died">YOU DIED</div>
+    </div>
+
+</div>
+
+<script>
+    // Game Elements
+    const dialogueText = document.getElementById('dialogue-text');
+    const optionsDiv = document.getElementById('options');
+    const overlay = document.getElementById('overlay');
+    const youDiedText = document.getElementById('you-died');
+    const homeBg = document.getElementById('home-bg');
+    const barBg = document.getElementById('bar-bg');
+
+    // Utility to show text and buttons
+    function setDialogue(text, options) {
+        dialogueText.innerText = text;
+        optionsDiv.innerHTML = ''; // clear old buttons
+        
+        options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => {
+                optionsDiv.innerHTML = ''; // Prevent double clicking
+                opt.action();
+            };
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    // State 1: Main Home Screen
+    function initHome() {
+        homeBg.classList.remove('hidden');
+        barBg.classList.add('hidden');
+        setDialogue("Mr.Devil is sitting quietly.", [
+            { text: "Talk", action: talkToDevil }
+        ]);
+    }
+
+    // State 2: Talk Interaction
+    function talkToDevil() {
+        setDialogue("How's it going today?", [
+            { text: "OK", action: () => {
+                setDialogue("Stellar.", []);
+                setTimeout(initHome, 2000);
+            }},
+            { text: "I hate life", action: () => {
+                setDialogue("That's a bummer. Wanna grab a drink to change the mood?", [
+                    { text: "Yeah", action: () => {
+                        setDialogue("Stellar.", []);
+                        setTimeout(transitionToBar, 1500);
+                    }},
+                    { text: "Nah", action: () => {
+                        setDialogue("Whatever.", []);
+                        setTimeout(initHome, 2000);
+                    }}
+                ]);
+            }},
+            { text: "Will you marry me?", action: triggerDeath }
+        ]);
+    }
+
+    // State 3: The Bar Scene
+    function transitionToBar() {
+        overlay.classList.add('active'); // fade out
+        
+        setTimeout(() => {
+            // Swap backgrounds while screen is black
+            homeBg.classList.add('hidden');
+            barBg.classList.remove('hidden');
+            
+            setDialogue("Here's to Johnny.", [
+                { text: "Cheers", action: transitionToHome },
+                { text: "Who's Johnny?", action: triggerDeath }
+            ]);
+            
+            overlay.classList.remove('active'); // fade in
+        }, 1000);
+    }
+
+    // State 4: Return home safely from Bar
+    function transitionToHome() {
+        overlay.classList.add('active');
+        setTimeout(() => {
+            initHome();
+            overlay.classList.remove('active');
+        }, 1000);
+    }
+
+    // State 5: YOU DIED (Dark Souls Style)
+    function triggerDeath() {
+        overlay.classList.add('active'); // Fade to black
+        
+        setTimeout(() => {
+            youDiedText.classList.add('show'); // Show YOU DIED text
+            
+            setTimeout(() => {
+                youDiedText.classList.remove('show'); // Fade out text
+                
+                setTimeout(() => {
+                    initHome(); // Reset game
+                    overlay.classList.remove('active'); // Fade back in to home
+                }, 1500);
+                
+            }, 3000); // Time to display YOU DIED
+            
+        }, 1000);
+    }
+
+    // Boot game
+    initHome();
+
+</script>
+</body>
+</html>
