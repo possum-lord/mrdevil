@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date with Mr.Devil</title>
-    <!-- 여기에 반드시 style 태그가 있어야 합니다! -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
 
@@ -127,6 +126,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
+            text-align: center;
         }
 
         #overlay.active {
@@ -134,6 +135,7 @@
             pointer-events: all;
         }
 
+        /* YOU DIED 스타일 */
         #you-died {
             color: #8b0000;
             font-size: clamp(40px, 10vw, 90px);
@@ -146,6 +148,24 @@
         }
 
         #you-died.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 새로 추가된 VICTORY 스타일 */
+        #victory-text {
+            color: #2ecc71; /* 네온 초록색 */
+            font-size: clamp(24px, 6vw, 60px); /* 텍스트가 길어서 살짝 작게 조정 */
+            font-weight: 700;
+            text-shadow: 2px 2px 0 #000, 0 0 25px #27ae60;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 3s ease-in-out;
+            display: none;
+        }
+
+        #victory-text.show {
             display: block;
             opacity: 1;
             transform: scale(1);
@@ -195,48 +215,38 @@
         <!-- Counter edge highlight -->
         <polygon points="120,330 270,370 750,220 750,225 270,375 120,335" fill="#52301c" class="pixel-rendering"/>
 
-        <!-- Mr. Devil (Side View, Sitting with Beer) & Stool -->
+        <!-- Mr. Devil (Side View) -->
         <g transform="translate(240, 110) scale(10)">
-            <!-- Stool -->
             <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
             <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/>
             <rect x="12" y="33" width="8" height="1" fill="#111" class="pixel-rendering"/>
             
-            <!-- Tail -->
             <rect x="7" y="22" width="4" height="2" fill="#9c5468" class="pixel-rendering"/>
             <rect x="5" y="18" width="2" height="6" fill="#9c5468" class="pixel-rendering"/>
             <rect x="6" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
             
-            <!-- Left Leg -->
             <rect x="15" y="23" width="2" height="4" fill="#753b4b" class="pixel-rendering"/>
             
-            <!-- Body -->
             <rect x="10" y="16" width="10" height="9" fill="#444" class="pixel-rendering"/>
             <rect x="16" y="17" width="4" height="7" fill="#5a5a5a" class="pixel-rendering"/>
             
-            <!-- Right Leg -->
             <rect x="11" y="22" width="7" height="3" fill="#444" class="pixel-rendering"/>
             <rect x="16" y="25" width="2" height="4" fill="#9c5468" class="pixel-rendering"/>
             
-            <!-- Head -->
             <rect x="12" y="7" width="9" height="9" fill="#444" class="pixel-rendering"/>
             <rect x="21" y="11" width="4" height="4" fill="#444" class="pixel-rendering"/>
             <rect x="24" y="11" width="1" height="1" fill="#000" class="pixel-rendering"/>
             
-            <!-- Eye -->
             <rect x="18" y="9" width="2" height="2" fill="#ff0000" class="pixel-rendering"/>
             <rect x="19" y="9" width="1" height="1" fill="#111" class="pixel-rendering"/>
             
-            <!-- Ear -->
             <rect x="13" y="3" width="3" height="4" fill="#333" class="pixel-rendering"/>
             <rect x="14" y="4" width="1" height="2" fill="#9c5468" class="pixel-rendering"/>
             
-            <!-- Arm -->
             <rect x="14" y="18" width="4" height="2" fill="#444" class="pixel-rendering"/>
             <rect x="18" y="17" width="4" height="2" fill="#444" class="pixel-rendering"/>
             <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
             
-            <!-- Beer Mug -->
             <rect x="23" y="12" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
             <rect x="24" y="13" width="3" height="3" fill="#f39c12" class="pixel-rendering"/>
             <rect x="23" y="11" width="5" height="2" fill="#fff" class="pixel-rendering"/>
@@ -270,8 +280,10 @@
         <div id="options"></div>
     </div>
 
+    <!-- Black Screen & Text Overlays -->
     <div id="overlay">
         <div id="you-died">YOU DIED</div>
+        <div id="victory-text">HE THINKS YOU'RE OK</div>
     </div>
 </div>
 
@@ -280,6 +292,7 @@
     const optionsDiv = document.getElementById('options');
     const overlay = document.getElementById('overlay');
     const youDiedText = document.getElementById('you-died');
+    const victoryText = document.getElementById('victory-text'); // VICTORY 텍스트 요소 가져오기
     const homeBg = document.getElementById('home-bg');
     const barBg = document.getElementById('bar-bg');
     const frontDevil = document.getElementById('mr-devil');
@@ -341,7 +354,8 @@
             frontDevil.classList.add('hidden'); 
             
             setDialogue("Here's to Johnny.", [
-                { text: "Cheers", action: transitionToHome },
+                // Cheers를 눌렀을 때 triggerVictory 실행으로 변경됨
+                { text: "Cheers", action: triggerVictory },
                 { text: "Who's Johnny?", action: triggerDeath }
             ]);
             
@@ -349,14 +363,7 @@
         }, 1000);
     }
 
-    function transitionToHome() {
-        overlay.classList.add('active');
-        setTimeout(() => {
-            initHome();
-            overlay.classList.remove('active');
-        }, 1000);
-    }
-
+    // State: YOU DIED (Dark Souls Style)
     function triggerDeath() {
         overlay.classList.add('active'); 
         
@@ -372,6 +379,26 @@
                 }, 1500);
                 
             }, 3000); 
+            
+        }, 1000);
+    }
+
+    // 새로 추가된 State: VICTORY (Dark Souls Style)
+    function triggerVictory() {
+        overlay.classList.add('active'); // 화면을 검게 전환
+        
+        setTimeout(() => {
+            victoryText.classList.add('show'); // HE THINKS YOU'RE OK 표시
+            
+            setTimeout(() => {
+                victoryText.classList.remove('show'); // 텍스트 서서히 사라짐
+                
+                setTimeout(() => {
+                    initHome(); // 홈으로 리셋
+                    overlay.classList.remove('active'); // 검은 화면 걷어내기
+                }, 1500);
+                
+            }, 3000); // 3초 동안 문구 표시
             
         }, 1000);
     }
