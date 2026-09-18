@@ -31,23 +31,14 @@
             overflow: hidden;
             border: 4px solid #333;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-            
-            /* 💡 핵심: 게임 화면 전체를 세로(column) Flexbox로 만들어 구역을 나눔 */
-            display: flex;
-            flex-direction: column;
         }
 
-        /* 📱 모바일 전용 세팅 */
         @media (max-width: 600px) {
             #game-container {
                 aspect-ratio: 3 / 4.5; 
             }
-            #mr-devil {
+            #mr-devil, #groom-devil {
                 width: 55% !important; 
-            }
-            #dialogue-box {
-                padding: 15px 15px 20px 15px !important; 
-                gap: 15px !important;
             }
         }
 
@@ -62,14 +53,6 @@
             z-index: 15;
         }
 
-        /* ---------------- 배경 및 쥐가 들어가는 게임 시각 영역 ---------------- */
-        #game-view {
-            flex-grow: 1; /* 텍스트 박스를 제외한 나머지 상단 공간을 꽉 채움 */
-            position: relative;
-            width: 100%;
-            overflow: hidden; /* 영역 밖으로 삐져나가는 것 숨김 */
-        }
-
         .bg-layer {
             position: absolute;
             top: 0; left: 0;
@@ -80,46 +63,44 @@
 
         .pixel-rendering { shape-rendering: crispEdges; }
 
-        /* ---------------- 홈 화면의 서있는 쥐 ---------------- */
-        #mr-devil {
-            position: absolute;
-            /* 💡 핵심: 쥐의 바닥을 game-view 영역 맨 아래(bottom: 0)에 고정 */
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 45%; 
-            height: auto;
-            z-index: 5;
-        }
-
         /* ---------------- 텍스트 박스 ---------------- */
         #dialogue-box {
-            /* 💡 게임 컨테이너 하단에 블록으로 쌓임 */
+            position: absolute;
+            bottom: 0; 
+            left: 0;
             width: 100%; 
-            min-height: 25%;
-            height: auto; /* 내용물이 많으면 위로 커짐 -> game-view가 줄어듦 -> 쥐도 위로 밀려남 */
+            min-height: 18%; 
+            height: auto; 
             background: #050505; 
             border-top: 4px solid #fff; 
-            padding: 20px 20px 30px 20px; 
+            padding: 15px 20px; 
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
-            gap: 20px; 
+            justify-content: center; 
+            gap: 12px; 
             z-index: 20; 
         }
 
+        @media (max-width: 600px) {
+            #dialogue-box {
+                min-height: 25%;
+                padding: 20px 15px 25px 15px;
+                gap: 20px;
+                justify-content: flex-start;
+            }
+        }
+
         #dialogue-text {
-            font-size: clamp(16px, 4vw, 28px);
+            font-size: clamp(16px, 4vw, 26px);
             color: #eee;
             margin: 0;
-            line-height: 1.4; 
+            line-height: 1.2; 
         }
 
         #options {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
-            padding-bottom: 5px; 
         }
 
         .option-btn {
@@ -127,8 +108,8 @@
             border: 2px solid #fff;
             color: #fff;
             font-family: 'Pixelify Sans', sans-serif;
-            font-size: clamp(14px, 3.5vw, 20px);
-            padding: 8px 16px; 
+            font-size: clamp(14px, 3.5vw, 18px); 
+            padding: 6px 14px; 
             cursor: pointer;
             transition: all 0.2s;
             text-transform: uppercase;
@@ -139,7 +120,24 @@
             color: #000;
         }
 
-        /* 오버레이 효과 (죽음, 승리 텍스트) */
+        /* ---------------- 서있는 쥐 (기본 & 신랑) ---------------- */
+        #mr-devil, #groom-devil {
+            position: absolute;
+            bottom: 25%; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45%; 
+            height: auto;
+            z-index: 5;
+        }
+
+        @media (max-width: 600px) {
+            #mr-devil, #groom-devil {
+                bottom: 30% !important; 
+            }
+        }
+
+        /* ---------------- 오버레이 효과 ---------------- */
         #overlay {
             position: absolute;
             top: 0; left: 0;
@@ -194,99 +192,182 @@
             opacity: 1;
             transform: scale(1);
         }
+
+        /* 💡 추가됨: 결혼 엔딩 문구 스타일 */
+        #married-text {
+            color: #f1c40f; /* 황금색 */
+            font-size: clamp(30px, 8vw, 80px); 
+            font-weight: 700;
+            text-shadow: 2px 2px 0 #000, 0 0 25px #f39c12;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 3s ease-in-out;
+            display: none;
+        }
+
+        #married-text.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
     </style>
 </head>
 <body>
 
 <div id="game-container">
     
-    <!-- 💡 수정된 부분: 배경과 쥐를 game-view라는 하나의 상단 박스로 묶음 -->
-    <div id="game-view">
+    <!-- Home Background -->
+    <svg class="bg-layer" id="home-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="800" height="600" fill="#262626" class="pixel-rendering"/>
+        <rect x="280" y="100" width="50" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="360" y="140" width="70" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="480" y="110" width="40" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="520" y="220" width="60" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="250" y="280" width="45" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="410" y="320" width="55" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="180" y="420" width="60" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+        <rect x="550" y="450" width="40" height="20" fill="#1c1c1c" class="pixel-rendering"/>
+    </svg>
+    
+    <!-- Bar Background -->
+    <svg class="bg-layer hidden" id="bar-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="800" height="600" fill="#140a08" class="pixel-rendering"/>
+        <polygon points="0,280 800,120 800,600 0,600" fill="#080402" class="pixel-rendering"/>
         
-        <!-- Home Background -->
-        <svg class="bg-layer" id="home-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="800" height="600" fill="#262626" class="pixel-rendering"/>
-            <rect x="280" y="100" width="50" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-            <rect x="360" y="140" width="70" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-            <rect x="480" y="110" width="40" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-            <rect x="520" y="220" width="60" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-            <rect x="250" y="280" width="45" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-            <rect x="410" y="320" width="55" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-            <rect x="180" y="420" width="60" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-            <rect x="550" y="450" width="40" height="20" fill="#1c1c1c" class="pixel-rendering"/>
-        </svg>
-        
-        <!-- Bar Background -->
-        <svg class="bg-layer hidden" id="bar-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <rect width="800" height="600" fill="#140a08" class="pixel-rendering"/>
-            <polygon points="0,280 800,120 800,600 0,600" fill="#080402" class="pixel-rendering"/>
-            
-            <g transform="translate(80, 100) scale(0.75)">
-                <polygon points="180,120 680,40 680,55 180,135" fill="#0a0504" class="pixel-rendering"/>
-                <rect x="250" y="80" width="16" height="45" fill="#27ae60" class="pixel-rendering"/>
-                <rect x="340" y="60" width="14" height="55" fill="#8e44ad" class="pixel-rendering"/>
-                <rect x="490" y="35" width="20" height="35" fill="#e67e22" class="pixel-rendering"/>
-                <rect x="580" y="20" width="15" height="50" fill="#2980b9" class="pixel-rendering"/>
+        <g transform="translate(80, 100) scale(0.75)">
+            <polygon points="180,120 680,40 680,55 180,135" fill="#0a0504" class="pixel-rendering"/>
+            <rect x="250" y="80" width="16" height="45" fill="#27ae60" class="pixel-rendering"/>
+            <rect x="340" y="60" width="14" height="55" fill="#8e44ad" class="pixel-rendering"/>
+            <rect x="490" y="35" width="20" height="35" fill="#e67e22" class="pixel-rendering"/>
+            <rect x="580" y="20" width="15" height="50" fill="#2980b9" class="pixel-rendering"/>
 
-                <polygon points="120,330 600,180 750,220 270,370" fill="#3d2314" class="pixel-rendering"/>
-                <polygon points="120,330 270,370 270,440 120,400" fill="#1c0e07" class="pixel-rendering"/>
-                <polygon points="270,370 750,220 750,290 270,440" fill="#24130a" class="pixel-rendering"/>
-                <polygon points="120,330 270,370 750,220 750,225 270,375 120,335" fill="#52301c" class="pixel-rendering"/>
+            <polygon points="120,330 600,180 750,220 270,370" fill="#3d2314" class="pixel-rendering"/>
+            <polygon points="120,330 270,370 270,440 120,400" fill="#1c0e07" class="pixel-rendering"/>
+            <polygon points="270,370 750,220 750,290 270,440" fill="#24130a" class="pixel-rendering"/>
+            <polygon points="120,330 270,370 750,220 750,225 270,375 120,335" fill="#52301c" class="pixel-rendering"/>
 
-                <g transform="translate(240, 110) scale(10)">
-                    <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
-                    <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/>
-                    <rect x="12" y="33" width="8" height="1" fill="#111" class="pixel-rendering"/>
-                    <rect x="7" y="22" width="4" height="2" fill="#9c5468" class="pixel-rendering"/>
-                    <rect x="5" y="18" width="2" height="6" fill="#9c5468" class="pixel-rendering"/>
-                    <rect x="6" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
-                    <rect x="15" y="23" width="2" height="4" fill="#753b4b" class="pixel-rendering"/>
-                    <rect x="10" y="16" width="10" height="9" fill="#444" class="pixel-rendering"/>
-                    <rect x="16" y="17" width="4" height="7" fill="#5a5a5a" class="pixel-rendering"/>
-                    <rect x="11" y="22" width="7" height="3" fill="#444" class="pixel-rendering"/>
-                    <rect x="16" y="25" width="2" height="4" fill="#9c5468" class="pixel-rendering"/>
-                    <rect x="12" y="7" width="9" height="9" fill="#444" class="pixel-rendering"/>
-                    <rect x="21" y="11" width="4" height="4" fill="#444" class="pixel-rendering"/>
-                    <rect x="24" y="11" width="1" height="1" fill="#000" class="pixel-rendering"/>
-                    <rect x="18" y="9" width="2" height="2" fill="#ff0000" class="pixel-rendering"/>
-                    <rect x="19" y="9" width="1" height="1" fill="#111" class="pixel-rendering"/>
-                    <rect x="13" y="3" width="3" height="4" fill="#333" class="pixel-rendering"/>
-                    <rect x="14" y="4" width="1" height="2" fill="#9c5468" class="pixel-rendering"/>
-                    <rect x="14" y="18" width="4" height="2" fill="#444" class="pixel-rendering"/>
-                    <rect x="18" y="17" width="4" height="2" fill="#444" class="pixel-rendering"/>
-                    <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
-                    <rect x="23" y="12" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
-                    <rect x="24" y="13" width="3" height="3" fill="#f39c12" class="pixel-rendering"/>
-                    <rect x="23" y="11" width="5" height="2" fill="#fff" class="pixel-rendering"/>
-                    <rect x="23" y="13" width="1" height="1" fill="#fff" class="pixel-rendering"/>
-                    <rect x="27" y="13" width="2" height="3" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
-                    <rect x="28" y="14" width="1" height="1" fill="#3d2314" class="pixel-rendering"/>
-                </g>
+            <g transform="translate(240, 110) scale(10)">
+                <rect x="11" y="25" width="10" height="2" fill="#4a2113" class="pixel-rendering"/>
+                <rect x="15" y="27" width="2" height="7" fill="#222" class="pixel-rendering"/>
+                <rect x="12" y="33" width="8" height="1" fill="#111" class="pixel-rendering"/>
+                <rect x="7" y="22" width="4" height="2" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="5" y="18" width="2" height="6" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="6" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="15" y="23" width="2" height="4" fill="#753b4b" class="pixel-rendering"/>
+                <rect x="10" y="16" width="10" height="9" fill="#444" class="pixel-rendering"/>
+                <rect x="16" y="17" width="4" height="7" fill="#5a5a5a" class="pixel-rendering"/>
+                <rect x="11" y="22" width="7" height="3" fill="#444" class="pixel-rendering"/>
+                <rect x="16" y="25" width="2" height="4" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="12" y="7" width="9" height="9" fill="#444" class="pixel-rendering"/>
+                <rect x="21" y="11" width="4" height="4" fill="#444" class="pixel-rendering"/>
+                <rect x="24" y="11" width="1" height="1" fill="#000" class="pixel-rendering"/>
+                <rect x="18" y="9" width="2" height="2" fill="#ff0000" class="pixel-rendering"/>
+                <rect x="19" y="9" width="1" height="1" fill="#111" class="pixel-rendering"/>
+                <rect x="13" y="3" width="3" height="4" fill="#333" class="pixel-rendering"/>
+                <rect x="14" y="4" width="1" height="2" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="14" y="18" width="4" height="2" fill="#444" class="pixel-rendering"/>
+                <rect x="18" y="17" width="4" height="2" fill="#444" class="pixel-rendering"/>
+                <rect x="22" y="16" width="2" height="2" fill="#9c5468" class="pixel-rendering"/>
+                <rect x="23" y="12" width="5" height="5" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
+                <rect x="24" y="13" width="3" height="3" fill="#f39c12" class="pixel-rendering"/>
+                <rect x="23" y="11" width="5" height="2" fill="#fff" class="pixel-rendering"/>
+                <rect x="23" y="13" width="1" height="1" fill="#fff" class="pixel-rendering"/>
+                <rect x="27" y="13" width="2" height="3" fill="#a8c3bc" class="pixel-rendering" opacity="0.9"/>
+                <rect x="28" y="14" width="1" height="1" fill="#3d2314" class="pixel-rendering"/>
             </g>
-        </svg>
+        </g>
+    </svg>
+
+    <!-- 💡 추가됨: Sunset Car Background (결혼 엔딩 씬) -->
+    <svg class="bg-layer hidden" id="sunset-bg" viewBox="0 0 800 600" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <!-- Sky & Sunset -->
+        <rect y="0" width="800" height="100" fill="#c0392b" class="pixel-rendering"/>
+        <rect y="100" width="800" height="80" fill="#d35400" class="pixel-rendering"/>
+        <rect y="180" width="800" height="80" fill="#e67e22" class="pixel-rendering"/>
+        <rect y="260" width="800" height="60" fill="#f39c12" class="pixel-rendering"/>
+        <rect x="360" y="240" width="80" height="80" fill="#f1c40f" class="pixel-rendering"/> <!-- 픽셀 태양 -->
         
-        <!-- Mr. Devil Front View -->
-        <svg id="mr-devil" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 23 25 L 31 25 L 31 27 L 23 27 Z" fill="#9c5468" class="pixel-rendering"/>
-            <path d="M 27 23 L 29 23 L 29 25 L 27 25 Z" fill="#9c5468" class="pixel-rendering"/>
-            <path d="M 19 27 L 22 27 L 22 29 L 19 29 Z" fill="#884050" class="pixel-rendering"/>
-            <path d="M 10 15 L 24 15 L 24 28 L 10 28 Z" fill="#444" class="pixel-rendering"/>
-            <path d="M 8 17 L 10 17 L 10 26 L 8 26 Z" fill="#444" class="pixel-rendering"/>
-            <path d="M 12 18 L 22 18 L 22 28 L 12 28 Z" fill="#5a5a5a" class="pixel-rendering"/>
-            <path d="M 11 27 L 14 27 L 14 29 L 11 29 Z" fill="#9c5468" class="pixel-rendering"/>
-            <path d="M 5 9 L 16 9 L 16 20 L 5 20 Z" fill="#444" class="pixel-rendering"/>
-            <path d="M 3 13 L 5 13 L 5 18 L 3 18 Z" fill="#444" class="pixel-rendering"/>
-            <path d="M 10 13 L 15 13 L 15 19 L 10 19 Z" fill="#5a5a5a" class="pixel-rendering"/>
-            <path d="M 13 4 L 18 4 L 18 10 L 13 10 Z" fill="#333" class="pixel-rendering"/>
-            <path d="M 14 5 L 17 5 L 17 9 L 14 9 Z" fill="#9c5468" class="pixel-rendering"/>
-            <path d="M 7 11 L 9 11 L 9 13 L 7 13 Z" fill="#ff0000" class="pixel-rendering"/>
-            <path d="M 8 11 L 9 11 L 9 12 L 8 12 Z" fill="#111" class="pixel-rendering"/>
-            <path d="M 2 13 L 4 13 L 4 15 L 2 15 Z" fill="#000" class="pixel-rendering"/>
-        </svg>
+        <!-- Distant Mountains -->
+        <polygon points="0,320 100,250 250,320" fill="#8e44ad" class="pixel-rendering"/>
+        <polygon points="150,320 300,220 450,320" fill="#8e44ad" class="pixel-rendering"/>
+        <polygon points="350,320 550,200 750,320" fill="#8e44ad" class="pixel-rendering"/>
+        <polygon points="650,320 750,260 800,320" fill="#8e44ad" class="pixel-rendering"/>
+        
+        <!-- Ground & Road -->
+        <rect y="320" width="800" height="280" fill="#2c3e50" class="pixel-rendering"/>
+        <polygon points="380,320 420,320 600,600 200,600" fill="#34495e" class="pixel-rendering"/>
+        <polygon points="398,320 402,320 410,600 390,600" fill="#f1c40f" class="pixel-rendering"/> <!-- 차선 -->
+        
+        <!-- Car Dashboard -->
+        <rect y="480" width="800" height="120" fill="#111" class="pixel-rendering"/>
+        <rect y="470" width="800" height="10" fill="#222" class="pixel-rendering"/>
+        
+        <!-- Mr Devil from behind (Driving) -->
+        <rect x="150" y="300" width="160" height="170" fill="#111" class="pixel-rendering"/> <!-- 신랑 양복 등 -->
+        <rect x="180" y="290" width="100" height="20" fill="#444" class="pixel-rendering"/> <!-- 목 -->
+        <rect x="170" y="180" width="120" height="110" fill="#444" class="pixel-rendering"/> <!-- 머리 뒷모습 -->
+        <rect x="150" y="150" width="40" height="50" fill="#333" class="pixel-rendering"/> <!-- 왼쪽 귀 -->
+        <rect x="270" y="150" width="40" height="50" fill="#333" class="pixel-rendering"/> <!-- 오른쪽 귀 -->
+        
+        <!-- Player from behind (Bridal Veil) -->
+        <rect x="480" y="240" width="140" height="230" fill="#fff" opacity="0.8" class="pixel-rendering"/> <!-- 늘어진 베일 -->
+        <rect x="510" y="200" width="80" height="80" fill="#d35400" class="pixel-rendering"/> <!-- 플레이어 머리카락 -->
+        <rect x="490" y="190" width="120" height="70" fill="#fff" opacity="0.9" class="pixel-rendering"/> <!-- 베일 머리 위 덮개 -->
+        
+        <!-- Steering Wheel -->
+        <rect x="140" y="420" width="180" height="20" fill="#222" class="pixel-rendering"/>
+        <rect x="220" y="440" width="20" height="50" fill="#222" class="pixel-rendering"/>
+    </svg>
+    
+    <!-- Mr. Devil Front View -->
+    <svg id="mr-devil" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 23 25 L 31 25 L 31 27 L 23 27 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 27 23 L 29 23 L 29 25 L 27 25 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 19 27 L 22 27 L 22 29 L 19 29 Z" fill="#884050" class="pixel-rendering"/>
+        <path d="M 10 15 L 24 15 L 24 28 L 10 28 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 8 17 L 10 17 L 10 26 L 8 26 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 12 18 L 22 18 L 22 28 L 12 28 Z" fill="#5a5a5a" class="pixel-rendering"/>
+        <path d="M 11 27 L 14 27 L 14 29 L 11 29 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 5 9 L 16 9 L 16 20 L 5 20 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 3 13 L 5 13 L 5 18 L 3 18 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 10 13 L 15 13 L 15 19 L 10 19 Z" fill="#5a5a5a" class="pixel-rendering"/>
+        <path d="M 13 4 L 18 4 L 18 10 L 13 10 Z" fill="#333" class="pixel-rendering"/>
+        <path d="M 14 5 L 17 5 L 17 9 L 14 9 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 7 11 L 9 11 L 9 13 L 7 13 Z" fill="#ff0000" class="pixel-rendering"/>
+        <path d="M 8 11 L 9 11 L 9 12 L 8 12 Z" fill="#111" class="pixel-rendering"/>
+        <path d="M 2 13 L 4 13 L 4 15 L 2 15 Z" fill="#000" class="pixel-rendering"/>
+    </svg>
 
-    </div> <!-- // game-view 끝 -->
+    <!-- 💡 추가됨: 신랑 복장의 Mr. Devil (Groom) -->
+    <svg id="groom-devil" class="hidden" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 23 25 L 31 25 L 31 27 L 23 27 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 27 23 L 29 23 L 29 25 L 27 25 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 19 27 L 22 27 L 22 29 L 19 29 Z" fill="#884050" class="pixel-rendering"/>
+        <path d="M 11 27 L 14 27 L 14 29 L 11 29 Z" fill="#9c5468" class="pixel-rendering"/>
+        
+        <!-- Base Body -->
+        <path d="M 10 15 L 24 15 L 24 28 L 10 28 Z" fill="#444" class="pixel-rendering"/>
+        
+        <!-- White Shirt -->
+        <rect x="15" y="15" width="4" height="9" fill="#fff" class="pixel-rendering"/>
+        <!-- Red Tie -->
+        <rect x="16" y="16" width="2" height="6" fill="#c0392b" class="pixel-rendering"/>
+        <!-- Suit Jacket Left -->
+        <rect x="10" y="15" width="5" height="10" fill="#111" class="pixel-rendering"/>
+        <!-- Suit Jacket Right -->
+        <rect x="19" y="15" width="5" height="10" fill="#111" class="pixel-rendering"/>
+        
+        <!-- Head -->
+        <path d="M 5 9 L 16 9 L 16 20 L 5 20 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 3 13 L 5 13 L 5 18 L 3 18 Z" fill="#444" class="pixel-rendering"/>
+        <path d="M 10 13 L 15 13 L 15 19 L 10 19 Z" fill="#5a5a5a" class="pixel-rendering"/>
+        <path d="M 13 4 L 18 4 L 18 10 L 13 10 Z" fill="#333" class="pixel-rendering"/>
+        <path d="M 14 5 L 17 5 L 17 9 L 14 9 Z" fill="#9c5468" class="pixel-rendering"/>
+        <path d="M 7 11 L 9 11 L 9 13 L 7 13 Z" fill="#ff0000" class="pixel-rendering"/>
+        <path d="M 8 11 L 9 11 L 9 12 L 8 12 Z" fill="#111" class="pixel-rendering"/>
+        <path d="M 2 13 L 4 13 L 4 15 L 2 15 Z" fill="#000" class="pixel-rendering"/>
+    </svg>
 
-    <!-- 💡 수정된 부분: 텍스트 박스는 game-view 바깥(하단)에 위치하여 절대 겹치지 않음 -->
     <div id="dialogue-box">
         <p id="dialogue-text"></p>
         <div id="options"></div>
@@ -296,19 +377,27 @@
     <div id="overlay">
         <div id="you-died">YOU DIED</div>
         <div id="victory-text">HE THINKS YOU'RE OK</div>
+        <div id="married-text">YOU GOT MARRIED</div>
     </div>
 
 </div>
 
 <script>
+    const dialogueBox = document.getElementById('dialogue-box');
     const dialogueText = document.getElementById('dialogue-text');
     const optionsDiv = document.getElementById('options');
+    
     const overlay = document.getElementById('overlay');
     const youDiedText = document.getElementById('you-died');
     const victoryText = document.getElementById('victory-text');
+    const marriedText = document.getElementById('married-text');
+    
     const homeBg = document.getElementById('home-bg');
     const barBg = document.getElementById('bar-bg');
+    const sunsetBg = document.getElementById('sunset-bg');
+    
     const frontDevil = document.getElementById('mr-devil');
+    const groomDevil = document.getElementById('groom-devil');
 
     function setDialogue(text, options) {
         dialogueText.innerText = text;
@@ -327,9 +416,12 @@
     }
 
     function initHome() {
+        dialogueBox.classList.remove('hidden');
         homeBg.classList.remove('hidden');
         barBg.classList.add('hidden');
+        sunsetBg.classList.add('hidden');
         frontDevil.classList.remove('hidden'); 
+        groomDevil.classList.add('hidden'); 
         
         setDialogue("Mr.Devil is sitting quietly.", [
             { text: "Talk", action: talkToDevil }
@@ -366,53 +458,132 @@
             barBg.classList.remove('hidden');
             frontDevil.classList.add('hidden'); 
             
+            // "Who's Johnny?" 클릭시 새로운 스토리 분기 연결
             setDialogue("Here's to Johnny.", [
                 { text: "Cheers", action: triggerVictory },
-                { text: "Who's Johnny?", action: triggerDeath }
+                { text: "Who's Johnny?", action: johnnyStory1 } 
             ]);
             
             overlay.classList.remove('active'); 
         }, 1000);
     }
 
+    /* --------- 새로 추가된 Johnny 스토리 흐름 --------- */
+    function johnnyStory1() {
+        setDialogue("Johnny was a friend of mine who left us too soon.", [
+            { text: "Oh...", action: johnnyStory2 },
+            { text: "I'm sorry.", action: johnnyStory2 }
+        ]);
+    }
+
+    function johnnyStory2() {
+        setDialogue("Nah. He lived a good life.", [
+            { text: "...", action: johnnyStory3 }
+        ]);
+    }
+
+    function johnnyStory3() {
+        setDialogue("Fat ass. Died trying to eat cheese from a mousetrap.", [
+            { text: "...", action: johnnyStory4 }
+        ]);
+    }
+
+    function johnnyStory4() {
+        setDialogue("Make sure you live a life with no regrets, doing whatever the hell you want.", [
+            { text: "What the hell?", action: triggerDeath },
+            { text: "I try to", action: johnnyStory5 }
+        ]);
+    }
+
+    function johnnyStory5() {
+        setDialogue("You're not half bad, kid.", [
+            { text: "...", action: transitionToGroom }
+        ]);
+    }
+
+    function transitionToGroom() {
+        overlay.classList.add('active'); 
+        setTimeout(() => {
+            barBg.classList.add('hidden');
+            homeBg.classList.remove('hidden'); 
+            groomDevil.classList.remove('hidden'); // 양복 입은 쥐 등장
+            
+            setDialogue("What's on your mind?", [
+                { text: "..?", action: groomStory2 }
+            ]);
+            
+            overlay.classList.remove('active'); 
+        }, 1000);
+    }
+
+    function groomStory2() {
+        setDialogue("Now all that's left is to run off into the sunset with me.", [
+            { text: "...", action: transitionToSunset }
+        ]);
+    }
+
+    function transitionToSunset() {
+        overlay.classList.add('active'); 
+        setTimeout(() => {
+            homeBg.classList.add('hidden');
+            groomDevil.classList.add('hidden');
+            dialogueBox.classList.add('hidden'); // 풍경 감상을 위해 텍스트 박스 숨김
+            
+            sunsetBg.classList.remove('hidden'); // 선셋 드라이빙 배경 등장
+            
+            overlay.classList.remove('active'); 
+            
+            // 2.5초간 노을 감상 후 결혼 축하 화면 띄우기
+            setTimeout(triggerMarriage, 2500); 
+
+        }, 1000);
+    }
+    /* -------------------------------------------------- */
+
+
     function triggerDeath() {
         overlay.classList.add('active'); 
-        
         setTimeout(() => {
             youDiedText.classList.add('show'); 
-            
             setTimeout(() => {
                 youDiedText.classList.remove('show'); 
-                
                 setTimeout(() => {
                     initHome(); 
                     overlay.classList.remove('active'); 
                 }, 1500);
-                
             }, 3000); 
-            
         }, 1000);
     }
 
     function triggerVictory() {
         overlay.classList.add('active'); 
-        
         setTimeout(() => {
             victoryText.classList.add('show'); 
-            
             setTimeout(() => {
                 victoryText.classList.remove('show'); 
-                
                 setTimeout(() => {
                     initHome(); 
                     overlay.classList.remove('active'); 
                 }, 1500);
-                
             }, 3000); 
-            
         }, 1000);
     }
 
+    function triggerMarriage() {
+        overlay.classList.add('active'); 
+        setTimeout(() => {
+            marriedText.classList.add('show'); 
+            setTimeout(() => {
+                marriedText.classList.remove('show'); 
+                setTimeout(() => {
+                    initHome(); // 모든 상태 초기화하고 홈으로 복귀
+                    overlay.classList.remove('active'); 
+                }, 1500);
+            }, 3000); 
+        }, 1000);
+    }
+
+    // 게임 시작
     initHome();
 </script>
 </body>
