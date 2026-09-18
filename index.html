@@ -320,10 +320,14 @@
         });
     }
 
-    // State 1: Main Home Screen
+   // State 1: Main Home Screen
     function initHome() {
         homeBg.classList.remove('hidden');
         barBg.classList.add('hidden');
+        
+        // 추가된 부분: 메인 화면으로 오면 다시 기존 쥐를 보여줍니다.
+        document.getElementById('mr-devil').classList.remove('hidden'); 
+        
         setDialogue("Mr.Devil is sitting quietly.", [
             { text: "Talk", action: talkToDevil }
         ]);
@@ -352,7 +356,7 @@
         ]);
     }
 
-    // State 3: The Bar Scene
+// State 3: The Bar Scene
     function transitionToBar() {
         overlay.classList.add('active'); // fade out
         
@@ -360,6 +364,9 @@
             // Swap backgrounds while screen is black
             homeBg.classList.add('hidden');
             barBg.classList.remove('hidden');
+            
+            // 추가된 부분: Bar 씬에서는 원래 서있던 앞모습 쥐를 숨깁니다.
+            document.getElementById('mr-devil').classList.add('hidden'); 
             
             setDialogue("Here's to Johnny.", [
                 { text: "Cheers", action: transitionToHome },
