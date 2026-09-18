@@ -4,16 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Date with Mr.Devil</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;700&display=swap');
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             background-color: #050505;
             color: #fff;
             font-family: 'Pixelify Sans', sans-serif;
@@ -25,9 +21,11 @@
             overflow: hidden;
         }
 
+        /* 💡 수정됨: 4:3 비율 고정 및 반응형 크기 */
         #game-container {
-            width: 800px;
-            height: 600px;
+            width: 100vw;
+            max-width: 800px;
+            aspect-ratio: 4 / 3; /* 어떤 화면이든 800x600 비율 유지 */
             background: #111;
             position: relative;
             overflow: hidden;
@@ -35,52 +33,6 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
-        /* 모바일 화면 너비에 맞춰 4:3 비율로 자동 축소 */
-        #game-container {
-            width: min(100vw, 800px);
-            height: min(75vw, 600px);
-            background: #111;
-            position: relative;
-            overflow: hidden;
-            border: 4px solid #333;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-        }
-
-        /* 텍스트 박스 높이를 화면 비율에 맞게 유동 조절 */
-        #dialogue-box {
-            position: absolute;
-            bottom: 0; left: 0;
-            width: 100%; 
-            min-height: 25%;
-            background: #1a1a1a;
-            border-top: 4px solid #fff;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            z-index: 10;
-        }
-
-        #dialogue-text {
-            font-size: clamp(18px, 4vw, 26px);
-            color: #eee;
-            margin: 0 0 10px 0;
-            line-height: 1.2;
-        }
-
-        .option-btn {
-            background: #000;
-            border: 2px solid #fff;
-            color: #fff;
-            font-family: 'Pixelify Sans', sans-serif;
-            font-size: clamp(14px, 3vw, 18px);
-            padding: 6px 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: uppercase;
-        }
-
-        /* Scanline effect for rough retro look */
         #game-container::after {
             content: "";
             position: absolute;
@@ -92,29 +44,25 @@
             z-index: 15;
         }
 
+        /* 💡 수정됨: 배경 꽉 채우기 */
         .bg-layer {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
-        /* SVG Pixel Rendering */
-        .pixel-rendering {
-            shape-rendering: crispEdges;
-        }
+        .pixel-rendering { shape-rendering: crispEdges; }
 
-        /* Mr. Devil Animation */
+        /* 💡 수정됨: 고정 px를 %로 변경하여 화면에 맞게 축소/확대됨 */
         #mr-devil {
             position: absolute;
-            bottom: 140px; 
+            bottom: 26%; /* 텍스트 박스 바로 위에 위치 */
             left: 50%;
             transform: translateX(-50%);
-            width: 300px;
-            height: 300px;
+            width: 35%; /* 화면 폭에 비례한 크기 */
+            height: auto;
             animation: breathe 2s infinite alternate ease-in-out;
             z-index: 5;
         }
@@ -124,22 +72,24 @@
             100% { transform: translateX(-50%) scaleY(1.04); }
         }
 
-        /* Dialogue UI */
+        /* 💡 수정됨: 높이와 패딩을 %로 변경 */
         #dialogue-box {
             position: absolute;
             bottom: 0; left: 0;
-            width: 100%; height: 160px;
+            width: 100%; 
+            height: 26%; 
             background: #1a1a1a;
             border-top: 4px solid #fff;
-            padding: 20px;
+            padding: 3%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             z-index: 10;
         }
 
+        /* 💡 수정됨: 화면 크기에 맞춰 폰트 사이즈 자동 조절 */
         #dialogue-text {
-            font-size: 28px;
+            font-size: clamp(16px, 3.5vw, 28px);
             color: #eee;
             margin: 0;
             line-height: 1.2;
@@ -147,7 +97,7 @@
 
         #options {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -156,8 +106,8 @@
             border: 2px solid #fff;
             color: #fff;
             font-family: 'Pixelify Sans', sans-serif;
-            font-size: 20px;
-            padding: 8px 16px;
+            font-size: clamp(12px, 2.5vw, 20px);
+            padding: 2% 4%;
             cursor: pointer;
             transition: all 0.2s;
             text-transform: uppercase;
@@ -168,7 +118,6 @@
             color: #000;
         }
 
-        /* Transition Overlay and YOU DIED */
         #overlay {
             position: absolute;
             top: 0; left: 0;
@@ -190,7 +139,7 @@
 
         #you-died {
             color: #8b0000;
-            font-size: 90px;
+            font-size: clamp(40px, 10vw, 90px);
             font-weight: 700;
             text-shadow: 2px 2px 0 #000, 0 0 25px #ff0000;
             opacity: 0;
@@ -204,7 +153,6 @@
             opacity: 1;
             transform: scale(1);
         }
-    </style>
 </head>
 <body>
 
